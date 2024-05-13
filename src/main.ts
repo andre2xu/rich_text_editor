@@ -34,14 +34,30 @@ class RichTextEditor {
         this.TEXT_BOX.on('mouseup', (event: JQuery.MouseUpEvent) => {
             if (event.button === 0) {
                 // execute the following when the left mouse button is released
-                const WINDOW_SELECTION: Selection | null = window.getSelection();
-
-                if (WINDOW_SELECTION !== null) {
-                    this.TEXT_BOX_SELECTION.selection = WINDOW_SELECTION;
-                    this.TEXT_BOX_SELECTION.range = WINDOW_SELECTION.getRangeAt(0);
-                }
+                this.#updateTextBoxSelection();
             }
         });
+    };
+
+
+
+    // PRIVATE
+    #updateTextBoxSelection() {
+        // assume there is no selection in the text box
+        this.TEXT_BOX_SELECTION.selection = null;
+        this.TEXT_BOX_SELECTION.range = null;
+
+        // check if there is a selection inside of the text box and update the mapping
+        const WINDOW_SELECTION: Selection | null = window.getSelection();
+
+        if (WINDOW_SELECTION !== null && WINDOW_SELECTION.anchorNode !== null && WINDOW_SELECTION.focusNode !== null) {
+            const TEXT_BOX_ELEMENT: HTMLDivElement = this.TEXT_BOX[0];
+
+            if (TEXT_BOX_ELEMENT.compareDocumentPosition(WINDOW_SELECTION.anchorNode) & Node.DOCUMENT_POSITION_CONTAINED_BY && TEXT_BOX_ELEMENT.compareDocumentPosition(WINDOW_SELECTION.focusNode) & Node.DOCUMENT_POSITION_CONTAINED_BY) {
+                this.TEXT_BOX_SELECTION.selection = WINDOW_SELECTION;
+                this.TEXT_BOX_SELECTION.range = WINDOW_SELECTION.getRangeAt(0);
+            }
+        }
     };
 };
 
