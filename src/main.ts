@@ -34,7 +34,7 @@ class RichTextEditor {
         this.TEXT_BOX.on('mouseup', (event: JQuery.MouseUpEvent) => {
             if (event.button === 0) {
                 // execute the following when the left mouse button is released
-                this.#updateTextBoxSelection();
+                this.#updateTextBoxSelectionData();
             }
         });
     };
@@ -42,7 +42,7 @@ class RichTextEditor {
 
 
     // PRIVATE
-    #updateTextBoxSelection() {
+    #updateTextBoxSelectionData() {
         // assume there is no selection in the text box
         this.TEXT_BOX_SELECTION_DATA.selection = null;
         this.TEXT_BOX_SELECTION_DATA.range = null;
