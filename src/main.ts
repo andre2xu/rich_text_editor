@@ -9,7 +9,7 @@ interface TextBoxSelection {
 
 class RichTextEditor {
     TEXT_BOX: JQuery<HTMLDivElement>;
-    TEXT_BOX_SELECTION: TextBoxSelection = {
+    TEXT_BOX_SELECTION_DATA: TextBoxSelection = {
         selection: null,
         range: null
     };
@@ -44,8 +44,8 @@ class RichTextEditor {
     // PRIVATE
     #updateTextBoxSelection() {
         // assume there is no selection in the text box
-        this.TEXT_BOX_SELECTION.selection = null;
-        this.TEXT_BOX_SELECTION.range = null;
+        this.TEXT_BOX_SELECTION_DATA.selection = null;
+        this.TEXT_BOX_SELECTION_DATA.range = null;
 
         // check if there is a selection inside of the text box and update the mapping
         const WINDOW_SELECTION: Selection | null = window.getSelection();
@@ -54,8 +54,8 @@ class RichTextEditor {
             const TEXT_BOX_ELEMENT: HTMLDivElement = this.TEXT_BOX[0];
 
             if (TEXT_BOX_ELEMENT.compareDocumentPosition(WINDOW_SELECTION.anchorNode) & Node.DOCUMENT_POSITION_CONTAINED_BY && TEXT_BOX_ELEMENT.compareDocumentPosition(WINDOW_SELECTION.focusNode) & Node.DOCUMENT_POSITION_CONTAINED_BY) {
-                this.TEXT_BOX_SELECTION.selection = WINDOW_SELECTION;
-                this.TEXT_BOX_SELECTION.range = WINDOW_SELECTION.getRangeAt(0);
+                this.TEXT_BOX_SELECTION_DATA.selection = WINDOW_SELECTION;
+                this.TEXT_BOX_SELECTION_DATA.range = WINDOW_SELECTION.getRangeAt(0);
             }
         }
     };
