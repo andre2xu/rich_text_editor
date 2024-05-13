@@ -13,6 +13,10 @@ const BABEL_OPTIONS = {
 	presets: [['@babel/preset-env', { modules: 'auto' }]],
 };
 
+const TYPESCRIPT_OPTIONS = {
+	allowSyntheticDefaultImports: true
+};
+
 
 
 export default [
@@ -25,7 +29,7 @@ export default [
 			format: 'umd'
 		},
 		plugins: [
-			typescript(),
+			typescript(TYPESCRIPT_OPTIONS),
 			resolve(), // so Rollup can find external dependencies in node_modules
 			commonjs(), // so Rollup can convert node modules to an ES module
 			babel(BABEL_OPTIONS)
@@ -41,7 +45,7 @@ export default [
 			{ file: package_json.module, format: 'es', exports: 'default' }
 		],
 		plugins: [
-			typescript(),
+			typescript(TYPESCRIPT_OPTIONS),
 			resolve(),
 			commonjs(),
 			babel(BABEL_OPTIONS)
@@ -57,7 +61,7 @@ export default [
 			format: 'iife' // for script tags
 		},
 		plugins: [
-			typescript(),
+			typescript(TYPESCRIPT_OPTIONS),
 			resolve(),
 			commonjs(),
 			babel(BABEL_OPTIONS)
