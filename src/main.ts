@@ -13,6 +13,10 @@ class RichTextEditor {
         }
 
         this.TEXT_BOX = $(ELEMENT);
+
+        // set text box attributes
+        this.TEXT_BOX.prop('contenteditable', true);
+        this.TEXT_BOX.prop('spellcheck', false);
     };
 };
 
