@@ -2,8 +2,14 @@
   "name": "@andre2xu/rich_text_editor",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {},
+  "main": "dist/rich-text-editor.cjs.js",
+  "module": "dist/rich-text-editor.mjs.js",
+  "browser": "dist/rich-text-editor.umd.js",
+  "type": "module",
+  "scripts": {
+    "watch": "rollup -c -w",
+    "build": "rollup -c"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/andre2xu/rich_text_editor.git"
