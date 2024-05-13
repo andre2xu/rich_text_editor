@@ -20,6 +20,13 @@ class RichTextEditor {
         // set text box attributes
         this.TEXT_BOX.prop('contenteditable', true);
         this.TEXT_BOX.prop('spellcheck', false);
+
+        // bind event(s) to text box
+        this.TEXT_BOX.on('mouseup', (event: JQuery.MouseUpEvent) => {
+            if (event.button === 0) {
+                // execute the following when the left mouse button is released
+            }
+        });
     };
 };
 
