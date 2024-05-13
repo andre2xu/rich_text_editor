@@ -2,8 +2,17 @@ import $ from 'jquery';
 
 
 
+interface TextBoxSelection {
+    selection: Selection | null,
+    range: Range | null
+};
+
 class RichTextEditor {
     TEXT_BOX: JQuery<HTMLDivElement>;
+    TEXT_BOX_SELECTION: TextBoxSelection = {
+        selection: null,
+        range: null
+    };
 
     constructor(textBoxId: string) {
         const ELEMENT: HTMLElement | null = document.getElementById(textBoxId);
@@ -25,6 +34,12 @@ class RichTextEditor {
         this.TEXT_BOX.on('mouseup', (event: JQuery.MouseUpEvent) => {
             if (event.button === 0) {
                 // execute the following when the left mouse button is released
+                const WINDOW_SELECTION: Selection | null = window.getSelection();
+
+                if (WINDOW_SELECTION !== null) {
+                    this.TEXT_BOX_SELECTION.selection = WINDOW_SELECTION;
+                    this.TEXT_BOX_SELECTION.range = WINDOW_SELECTION.getRangeAt(0);
+                }
             }
         });
     };
