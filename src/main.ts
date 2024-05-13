@@ -63,6 +63,10 @@ class RichTextEditor {
             }
         }
     };
+
+    __selectionInTextBoxExists__() {
+        return this.TEXT_BOX_SELECTION_DATA.selection !== null && this.TEXT_BOX_SELECTION_DATA.range !== null;
+    };
 };
 
 export default RichTextEditor;
