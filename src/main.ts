@@ -37,6 +37,10 @@ class RichTextEditor {
                 this.#updateTextBoxSelectionData();
             }
         });
+
+        this.TEXT_BOX.on('mouseenter', (_: JQuery.MouseEnterEvent) => {
+            this.#updateTextBoxSelectionData();
+        });
     };
 
 
