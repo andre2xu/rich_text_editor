@@ -98,9 +98,30 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
     PARENT_RANGE.insertNode(NEW_PARENT_FRAGMENT);
 };
 
+function removeInnerColorElements(parent: HTMLElement) {
+    if (isColorElement(parent) === false) {
+        throw TypeError("Parent must be a color element");
+    }
+
+    const RANGE: Range = document.createRange();
+    RANGE.selectNode(parent);
+
+    const PARENT_FRAGMENT: DocumentFragment = RANGE.extractContents();
+
+    // find all inner color elements and move their contents out
+    $(PARENT_FRAGMENT.children[0]).find(COLOR_ELEMENT_SELECTOR).each((_: number, innerColorElement: HTMLElement) => {
+        const INNER_COLOR_ELEMENT: JQuery<HTMLElement> = $(innerColorElement);
+
+        INNER_COLOR_ELEMENT.replaceWith(INNER_COLOR_ELEMENT.contents());
+    });
+
+    RANGE.insertNode(PARENT_FRAGMENT);
+};
+
 export {
     isColorElement,
     getClosestParentColorElement,
     getInnerColorElements,
-    separateColorElementFromParentColorElement
+    separateColorElementFromParentColorElement,
+    removeInnerColorElements
 };
