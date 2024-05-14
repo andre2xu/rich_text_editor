@@ -2,18 +2,28 @@ import $ from 'jquery';
 
 
 
+const COLOR_ELEMENT_SELECTOR: string = 'span[data-type="color"]';
+
 function isColorElement(element: HTMLElement) {
     return element instanceof HTMLSpanElement && element.getAttribute('data-type') === 'color';
 };
 
 function getClosestParentColorElement(child: HTMLElement): HTMLElement | undefined {
     if (isColorElement(child)) {
-        const PARENT = $(child).parents('span[data-type="color"]').first()[0];
+        const PARENT = $(child).parents(COLOR_ELEMENT_SELECTOR).first()[0];
 
         return PARENT;
     }
 
     throw TypeError("Child element must be a color element");
+};
+
+function getInnerColorElements(parent: HTMLElement) {
+    if (isColorElement(parent) === false) {
+        throw TypeError("Parent must be a color element");
+    }
+
+    return $(parent).find(COLOR_ELEMENT_SELECTOR).toArray();
 };
 
 function separateColorElementFromParentColorElement(child: HTMLElement, parent: HTMLElement) {
@@ -91,5 +101,6 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
 export {
     isColorElement,
     getClosestParentColorElement,
+    getInnerColorElements,
     separateColorElementFromParentColorElement
 };
