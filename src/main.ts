@@ -113,6 +113,9 @@ class RichTextEditor {
                 if (PARENT_COLOR_ELEMENT !== undefined) {
                     COLOR_HELPERS.separateColorElementFromParentColorElement(COLOR_ELEMENT[0], PARENT_COLOR_ELEMENT);
                 }
+
+                // delete temporary id
+                $(`#${this.TEMP_ID}`).removeAttr('id');
             }
             else {
                 throw TypeError("Invalid selection type");
