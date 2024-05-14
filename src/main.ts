@@ -79,8 +79,13 @@ class RichTextEditor {
             throw TypeError("All RGB values must be a number between 0 and 255");
         }
 
-        // apply color to selection
         if (this.__selectionInTextBoxExists__()) {
+            // create color element
+            const COLOR_ELEMENT: JQuery<HTMLSpanElement> = $(document.createElement('span'));
+            COLOR_ELEMENT.attr('data-type', 'color');
+            COLOR_ELEMENT.css('color', `rgb(${r},${g},${b})`);
+
+            // apply color to selection
             const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
 
             if (SELECTION_TYPE === 'Caret') {
