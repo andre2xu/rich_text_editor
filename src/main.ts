@@ -67,6 +67,13 @@ class RichTextEditor {
     __selectionInTextBoxExists__() {
         return this.TEXT_BOX_SELECTION_DATA.selection !== null && this.TEXT_BOX_SELECTION_DATA.range !== null;
     };
+
+
+
+    // PUBLIC
+    applyColor(r: number, g: number, b: number) {
+        
+    };
 };
 
 export default RichTextEditor;

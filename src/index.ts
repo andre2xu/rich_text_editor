@@ -16,6 +16,8 @@ window.addEventListener('load', () => {
                 const R: number = parseInt(HEX.substring(0, 2), 16);
                 const G: number = parseInt(HEX.substring(2, 4), 16);
                 const B: number = parseInt(HEX.substring(4, 6), 16);
+
+                RTE.applyColor(R, G, B);
             }
         });
     }
