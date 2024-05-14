@@ -44,7 +44,7 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
     RIGHT_SLICE_RANGE.setEndAfter(PARENT_FRAGMENT.children[0]);
 
     // shallow copy the non-color-element parents of the color element
-    let non_color_element_parents: Node[] = [];
+    const NON_COLOR_ELEMENT_PARENTS: Node[] = [];
 
     $(child).parents().each((_: number, p: HTMLElement) => {
         if (p === parent) {
@@ -53,11 +53,8 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
         }
 
         // make a shallow copy of the parent (in order to keep any attributes while leaving the element itself empty)
-        non_color_element_parents.push(p.cloneNode(false));
+        NON_COLOR_ELEMENT_PARENTS.push(p.cloneNode(false));
     });
-
-    // reverse the array so that the innermost parents start first
-    non_color_element_parents = non_color_element_parents.reverse();
 
     // extract the slices
     const LEFT_SLICE_FRAGMENT: DocumentFragment = LEFT_SLICE_RANGE.extractContents();
@@ -65,7 +62,7 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
     const RIGHT_SLICE_FRAGMENT: DocumentFragment = RIGHT_SLICE_RANGE.extractContents();
 
     // wrap the contents of the child color element with the non-color-element parents
-    $(non_color_element_parents).each((_: number, element: Node[]) => {
+    $(NON_COLOR_ELEMENT_PARENTS).each((_: number, element: Node[]) => {
         if (element instanceof HTMLElement) {
             const RANGE = document.createRange();
             RANGE.selectNodeContents(MIDDLE_SLICE_FRAGMENT);
@@ -74,7 +71,7 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
     });
 
     // create a new fragment that has the color elements separated
-    const NEW_PARENT_FRAGMENT = document.createDocumentFragment();
+    const NEW_PARENT_FRAGMENT: DocumentFragment = document.createDocumentFragment();
 
     NEW_PARENT_FRAGMENT.append(LEFT_SLICE_FRAGMENT);
     NEW_PARENT_FRAGMENT.append(MIDDLE_SLICE_FRAGMENT);
