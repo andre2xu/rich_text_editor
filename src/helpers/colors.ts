@@ -2,7 +2,7 @@ import $ from 'jquery';
 
 
 
-function getClosestParentColorElement(childId: string) {
+function getClosestParentColorElement(childId: string): HTMLElement | undefined {
     let child: JQuery<HTMLElement> | HTMLElement | null = document.getElementById(childId);
 
     if (child !== null) {
