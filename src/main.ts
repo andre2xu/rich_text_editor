@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import * as GENERAL_HELPERS from './helpers/general';
 import * as COLOR_HELPERS from './helpers/colors';
 
 
@@ -119,6 +120,8 @@ class RichTextEditor {
 
                 if (INNER_COLOR_ELEMENTS.length > 0) {
                     COLOR_HELPERS.removeInnerColorElements(COLOR_ELEMENT[0]);
+
+                    GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(COLOR_ELEMENT[0]);
                 }
 
                 // delete temporary id
