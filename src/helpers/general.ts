@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import * as FORMAT_HELPERS from './formats';
 import * as COLOR_HELPERS from './colors';
 
 
@@ -29,6 +30,16 @@ function mergeSimilarAdjacentChildNodes(parent: HTMLElement) {
 
                     NODE_AFTER.contents().appendTo(previous_node);
                     NODE_AFTER.remove();
+                }
+                else if (FORMAT_HELPERS.isFormatElement(node) && FORMAT_HELPERS.isFormatElement(previous_node) && node.tagName === previous_node.tagName) {
+                    // merge format elements with the same tag
+
+                    const NODE_AFTER: JQuery<HTMLElement> = $(node);
+
+                    NODE_AFTER.contents().appendTo(previous_node);
+                    NODE_AFTER.remove();
+
+                    mergeSimilarAdjacentChildNodes(previous_node);
                 }
             }
             else if (node.nodeType === Node.TEXT_NODE && previous_node.nodeType === Node.TEXT_NODE && node.nodeValue !== null && previous_node.nodeValue !== null) {
