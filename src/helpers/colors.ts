@@ -6,19 +6,14 @@ function isColorElement(element: HTMLElement) {
     return element instanceof HTMLSpanElement && element.getAttribute('data-type') === 'color';
 };
 
-function getClosestParentColorElement(childId: string): HTMLElement | undefined {
-    let child: JQuery<HTMLElement> | HTMLElement | null = document.getElementById(childId);
+function getClosestParentColorElement(child: HTMLElement): HTMLElement | undefined {
+    if (isColorElement(child)) {
+        const PARENT = $(child).parents('span[data-type="color"]').first()[0];
 
-    if (child !== null) {
-        child = $(child);
-
-        child = child.parents('span[data-type="color"]').first()[0];
-
-        return child;
+        return PARENT;
     }
-    else {
-        throw ReferenceError("There is no element with that id.");
-    }
+
+    throw TypeError("Child element must be a color element");
 };
 
 export {
