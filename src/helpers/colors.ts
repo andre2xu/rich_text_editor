@@ -106,16 +106,16 @@ function removeInnerColorElements(parent: HTMLElement) {
     const RANGE: Range = document.createRange();
     RANGE.selectNode(parent);
 
-    const PARENT_FRAGMENT: DocumentFragment = RANGE.extractContents();
+    const FRAGMENT: DocumentFragment = RANGE.extractContents();
 
     // find all inner color elements and move their contents out
-    $(PARENT_FRAGMENT.children[0]).find(COLOR_ELEMENT_SELECTOR).each((_: number, innerColorElement: HTMLElement) => {
+    $(FRAGMENT.children[0]).find(COLOR_ELEMENT_SELECTOR).each((_: number, innerColorElement: HTMLElement) => {
         const INNER_COLOR_ELEMENT: JQuery<HTMLElement> = $(innerColorElement);
 
         INNER_COLOR_ELEMENT.replaceWith(INNER_COLOR_ELEMENT.contents());
     });
 
-    RANGE.insertNode(PARENT_FRAGMENT);
+    RANGE.insertNode(FRAGMENT);
 };
 
 export {
