@@ -37,7 +37,7 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
     LEFT_SLICE_RANGE.setEndBefore(child);
 
     const MIDDLE_SLICE_RANGE: Range = document.createRange();
-    MIDDLE_SLICE_RANGE.selectNodeContents(child);
+    MIDDLE_SLICE_RANGE.selectNode(child);
 
     const RIGHT_SLICE_RANGE: Range = document.createRange();
     RIGHT_SLICE_RANGE.setStartAfter(child);
@@ -65,7 +65,7 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
     $(NON_COLOR_ELEMENT_PARENTS).each((_: number, element: Node[]) => {
         if (element instanceof HTMLElement) {
             const RANGE = document.createRange();
-            RANGE.selectNodeContents(MIDDLE_SLICE_FRAGMENT);
+            RANGE.selectNodeContents(MIDDLE_SLICE_FRAGMENT.children[0]);
             RANGE.surroundContents(element);
         }
     });
