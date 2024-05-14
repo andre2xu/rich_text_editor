@@ -72,7 +72,12 @@ class RichTextEditor {
 
     // PUBLIC
     applyColor(r: number, g: number, b: number) {
-        
+        // validate RGB values
+        const ARGS: number[] = [r, g, b];
+
+        if (ARGS.every((arg) => { return typeof arg === 'number' }) === false || ARGS.every((arg) => { return arg >= 0 && arg <= 255 }) === false) {
+            throw TypeError("All RGB values must be a number between 0 and 255");
+        }
     };
 };
 
