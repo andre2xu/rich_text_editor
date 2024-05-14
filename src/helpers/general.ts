@@ -33,6 +33,8 @@ function mergeSimilarAdjacentChildNodes(parent: HTMLElement) {
             }
             else if (node.nodeType === Node.TEXT_NODE && previous_node.nodeType === Node.TEXT_NODE && node.nodeValue !== null && previous_node.nodeValue !== null) {
                 previous_node.nodeValue = previous_node.nodeValue + node.nodeValue;
+
+                $(node).remove();
             }
 
             previous_node = node;
