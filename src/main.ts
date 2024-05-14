@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import * as COLOR_HELPERS from './helpers/colors';
 
 
 
@@ -105,6 +106,13 @@ class RichTextEditor {
 
                 // replace selection with colored contents
                 SELECTION_RANGE.insertNode(COLOR_ELEMENT[0]);
+
+                // check if the new color element is inside of an existing one and if so take it out
+                const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(COLOR_ELEMENT[0]);
+
+                if (PARENT_COLOR_ELEMENT !== undefined) {
+                    COLOR_HELPERS.separateColorElementFromParentColorElement(COLOR_ELEMENT[0], PARENT_COLOR_ELEMENT);
+                }
             }
             else {
                 throw TypeError("Invalid selection type");
