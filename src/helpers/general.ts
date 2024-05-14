@@ -4,6 +4,15 @@ import * as COLOR_HELPERS from './colors';
 
 
 
+function moveContentsTo(element: HTMLElement, destination: HTMLElement) {
+    const ELEMENT: JQuery<HTMLElement> = $(element);
+
+    ELEMENT.contents().appendTo(destination);
+    ELEMENT.remove();
+
+    mergeSimilarAdjacentChildNodes(destination);
+};
+
 function mergeSimilarAdjacentChildNodes(parent: HTMLElement) {
     const RANGE: Range = document.createRange();
     RANGE.selectNodeContents(parent);
