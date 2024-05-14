@@ -2,6 +2,10 @@ import $ from 'jquery';
 
 
 
+function isColorElement(element: HTMLElement) {
+    return element instanceof HTMLSpanElement && element.getAttribute('data-type') === 'color';
+};
+
 function getClosestParentColorElement(childId: string): HTMLElement | undefined {
     let child: JQuery<HTMLElement> | HTMLElement | null = document.getElementById(childId);
 
@@ -18,5 +22,6 @@ function getClosestParentColorElement(childId: string): HTMLElement | undefined 
 };
 
 export {
+    isColorElement,
     getClosestParentColorElement
 };
