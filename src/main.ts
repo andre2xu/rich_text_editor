@@ -14,6 +14,8 @@ class RichTextEditor {
         range: null
     };
 
+    TEMP_ID: string = 'temp';
+
     constructor(textBoxId: string) {
         const ELEMENT: HTMLElement | null = document.getElementById(textBoxId);
 
@@ -82,6 +84,7 @@ class RichTextEditor {
         if (this.__selectionInTextBoxExists__()) {
             // create color element
             const COLOR_ELEMENT: JQuery<HTMLSpanElement> = $(document.createElement('span'));
+            COLOR_ELEMENT.attr('id', this.TEMP_ID);
             COLOR_ELEMENT.attr('data-type', 'color');
             COLOR_ELEMENT.css('color', `rgb(${r},${g},${b})`);
 
