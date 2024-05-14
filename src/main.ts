@@ -78,6 +78,22 @@ class RichTextEditor {
         if (ARGS.every((arg) => { return typeof arg === 'number' }) === false || ARGS.every((arg) => { return arg >= 0 && arg <= 255 }) === false) {
             throw TypeError("All RGB values must be a number between 0 and 255");
         }
+
+        // apply color to selection
+        if (this.__selectionInTextBoxExists__()) {
+            const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
+
+            if (SELECTION_TYPE === 'Caret') {
+                
+            }
+            else if (SELECTION_TYPE === 'Range') {
+                // extract selected contents
+                const SELECTED_CONTENTS: DocumentFragment = this.TEXT_BOX_SELECTION_DATA.range?.extractContents() as DocumentFragment;
+            }
+            else {
+                throw TypeError("Invalid selection type");
+            }
+        }
     };
 };
 
