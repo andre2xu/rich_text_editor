@@ -114,6 +114,13 @@ class RichTextEditor {
                     COLOR_HELPERS.separateColorElementFromParentColorElement(COLOR_ELEMENT[0], PARENT_COLOR_ELEMENT);
                 }
 
+                // check if the new color element has inner color elements and if so remove them leaving only their contents
+                const INNER_COLOR_ELEMENTS: HTMLElement[] = COLOR_HELPERS.getInnerColorElements(COLOR_ELEMENT[0]);
+
+                if (INNER_COLOR_ELEMENTS.length > 0) {
+                    COLOR_HELPERS.removeInnerColorElements(COLOR_ELEMENT[0]);
+                }
+
                 // delete temporary id
                 $(`#${this.TEMP_ID}`).removeAttr('id');
             }
