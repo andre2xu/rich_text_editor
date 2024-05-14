@@ -92,8 +92,16 @@ class RichTextEditor {
                 
             }
             else if (SELECTION_TYPE === 'Range') {
-                // extract selected contents
-                const SELECTED_CONTENTS: DocumentFragment = this.TEXT_BOX_SELECTION_DATA.range?.extractContents() as DocumentFragment;
+                const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
+
+                // convert selection to a fragment
+                const SELECTED_CONTENTS: DocumentFragment = SELECTION_RANGE.extractContents();
+
+                // put fragment inside of color element
+                COLOR_ELEMENT.append(SELECTED_CONTENTS);
+
+                // replace selection with colored contents
+                SELECTION_RANGE.insertNode(COLOR_ELEMENT[0]);
             }
             else {
                 throw TypeError("Invalid selection type");
