@@ -34,21 +34,11 @@ function mergeSimilarAdjacentChildNodes(parent: HTMLElement) {
             if (node instanceof HTMLElement && previous_node instanceof HTMLElement) {
                 if (COLOR_HELPERS.isColorElement(node) && COLOR_HELPERS.isColorElement(previous_node) && node.getAttribute('style') === previous_node.getAttribute('style')) {
                     // merge color elements with the same color
-
-                    const NODE_AFTER: JQuery<HTMLElement> = $(node);
-
-                    NODE_AFTER.contents().appendTo(previous_node);
-                    NODE_AFTER.remove();
+                    moveContentsTo(node, previous_node);
                 }
                 else if (FORMAT_HELPERS.isFormatElement(node) && FORMAT_HELPERS.isFormatElement(previous_node) && node.tagName === previous_node.tagName) {
                     // merge format elements with the same tag
-
-                    const NODE_AFTER: JQuery<HTMLElement> = $(node);
-
-                    NODE_AFTER.contents().appendTo(previous_node);
-                    NODE_AFTER.remove();
-
-                    mergeSimilarAdjacentChildNodes(previous_node);
+                    moveContentsTo(node, previous_node);
                 }
             }
             else if (node.nodeType === Node.TEXT_NODE && previous_node.nodeType === Node.TEXT_NODE && node.nodeValue !== null && previous_node.nodeValue !== null) {
