@@ -68,9 +68,19 @@ class RichTextEditor {
                         this.__selectAndPlaceCaretInsideElement__(ELEMENT);
                     }
 
-                    // delete the caret selection element if it's still empty (i.e. a key was pressed but no character was put inside)
                     if (ELEMENT.innerHTML === '\u200b') {
+                        // delete the caret selection element if it's still empty (i.e. a key was pressed but no character was put inside)
                         $(ELEMENT).remove();
+                    }
+                    else if (COLOR_HELPERS.isColorElement(ELEMENT)) {
+                        // check if the caret selection element (a color element) is inside of an existing color element and if so take it out
+                        const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(ELEMENT);
+
+                        if (PARENT_COLOR_ELEMENT !== undefined) {
+                            COLOR_HELPERS.separateColorElementFromParentColorElement(ELEMENT, PARENT_COLOR_ELEMENT);
+
+                            this.__selectAndPlaceCaretInsideElement__(ELEMENT);
+                        }
                     }
                 }
             }
