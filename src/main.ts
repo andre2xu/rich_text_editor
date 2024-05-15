@@ -6,14 +6,16 @@ import * as COLOR_HELPERS from './helpers/colors';
 
 interface TextBoxSelection {
     selection: Selection | null,
-    range: Range | null
+    range: Range | null,
+    editedContent: HTMLElement | null
 };
 
 class RichTextEditor {
     TEXT_BOX: JQuery<HTMLDivElement>;
     TEXT_BOX_SELECTION_DATA: TextBoxSelection = {
         selection: null,
-        range: null
+        range: null,
+        editedContent: null // HTML of selection after it has been styled
     };
 
     TEMP_ID: string = 'temp';
@@ -54,6 +56,7 @@ class RichTextEditor {
         // assume there is no selection in the text box
         this.TEXT_BOX_SELECTION_DATA.selection = null;
         this.TEXT_BOX_SELECTION_DATA.range = null;
+        this.TEXT_BOX_SELECTION_DATA.editedContent = null;
 
         // check if there is a selection inside of the text box and update the mapping
         const WINDOW_SELECTION: Selection | null = window.getSelection();
@@ -126,6 +129,9 @@ class RichTextEditor {
 
                 // delete temporary id
                 $(`#${this.TEMP_ID}`).removeAttr('id');
+
+                // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
+                this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
             }
             else {
                 throw TypeError("Invalid selection type");
