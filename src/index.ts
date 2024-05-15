@@ -23,8 +23,8 @@ window.addEventListener('load', () => {
             }
         });
 
-        // prevent the text box from losing focus (i.e. the selection) when clicking on the color picker
         COLOR_PICKER.addEventListener('mousedown', (event: Event) => {
+            // prevent the text box from losing focus (i.e. the selection) when clicking on the color picker
             event.preventDefault();
 
             if (color_picker_is_visible) {
