@@ -116,7 +116,16 @@ class RichTextEditor {
             const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
 
             if (SELECTION_TYPE === 'Caret') {
-                
+                const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
+
+                // add a zero-width space character to the empty color element so that it can be focused
+                COLOR_ELEMENT.append(document.createTextNode('\u200b'));
+
+                SELECTION_RANGE.insertNode(COLOR_ELEMENT[0]);
+
+                // make caret re-appear inside the color element
+                COLOR_ELEMENT[0].focus();
+                SELECTION_RANGE.collapse();
             }
             else if (SELECTION_TYPE === 'Range') {
                 const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
