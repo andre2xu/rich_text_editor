@@ -39,12 +39,26 @@ class RichTextEditor {
         // bind event(s) to text box
         this.TEXT_BOX.on('mouseup', (event: JQuery.MouseUpEvent) => {
             if (event.button === 0) {
+                // check if a caret selection was made and delete the caret selection element if it's empty
+                if (this.__emptyCaretSelectionElementExists__()) {
+                    $(this.TEXT_BOX_SELECTION_DATA.editedContent as HTMLElement).remove();
+
+                    this.TEXT_BOX_SELECTION_DATA.editedContent = null;
+                }
+
                 // execute the following when the left mouse button is released
                 this.__updateTextBoxSelectionData__();
             }
         });
 
         this.TEXT_BOX.on('mouseenter', (_: JQuery.MouseEnterEvent) => {
+            // check if a caret selection was made and delete the caret selection element if it's empty
+            if (this.__emptyCaretSelectionElementExists__()) {
+                $(this.TEXT_BOX_SELECTION_DATA.editedContent as HTMLElement).remove();
+
+                this.TEXT_BOX_SELECTION_DATA.editedContent = null;
+            }
+
             this.__updateTextBoxSelectionData__();
         });
 
