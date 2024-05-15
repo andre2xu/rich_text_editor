@@ -87,6 +87,8 @@ class RichTextEditor {
                     if (ELEMENT.innerHTML === '\u200b') {
                         // delete the caret selection element if it's still empty (i.e. a key was pressed but no character was put inside)
                         $(ELEMENT).remove();
+
+                        this.TEXT_BOX_SELECTION_DATA.editedContent = null;
                     }
                     else if (COLOR_HELPERS.isColorElement(ELEMENT)) {
                         // check if the caret selection element (a color element) is inside of an existing color element and if so take it out
