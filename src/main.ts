@@ -45,6 +45,31 @@ class RichTextEditor {
         this.TEXT_BOX.on('mouseenter', (_: JQuery.MouseEnterEvent) => {
             this.__updateTextBoxSelectionData__();
         });
+
+        this.TEXT_BOX.on('keyup', (_: JQuery.KeyUpEvent) => {
+            if (this.TEXT_BOX_SELECTION_DATA.editedContent !== null) {
+                // copy the HTML of the selection before updating the text box selection data
+                const ELEMENT: HTMLElement = this.TEXT_BOX_SELECTION_DATA.editedContent;
+
+                // update the text box selection data to see what is currently selected
+                this.__updateTextBoxSelectionData__();
+
+                // save the element's reference again in the text box selection data
+                this.TEXT_BOX_SELECTION_DATA.editedContent = ELEMENT;
+
+                // check if a caret selection was made
+                if (this.__selectionInTextBoxExists__() && this.TEXT_BOX_SELECTION_DATA.selection instanceof Selection && this.TEXT_BOX_SELECTION_DATA.selection.type === 'Caret') {
+                    // check if the element, whose reference was saved in the text box selection data, matches the current selection
+                    if (this.TEXT_BOX_SELECTION_DATA.selection.anchorNode?.parentElement === ELEMENT) {
+                        // remove zero-width space character
+                        ELEMENT.innerHTML = ELEMENT.innerHTML.replace('\u200b', '');
+
+                        // move the caret to the right of the newly-inserted character
+                        this.__selectAndPlaceCaretInsideElement__(ELEMENT);
+                    }
+                }
+            }
+        });
     };
 
 
