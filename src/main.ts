@@ -253,6 +253,9 @@ class RichTextEditor {
                     GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(COLOR_ELEMENT[0]);
                 }
 
+                // get rid of any empty elements left
+                GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
+
                 // highlight selection again
                 this.__selectAndHighlightElement__(COLOR_ELEMENT[0]);
 
