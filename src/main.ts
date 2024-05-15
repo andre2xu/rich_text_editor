@@ -149,6 +149,23 @@ class RichTextEditor {
         }
     };
 
+    __emptyCaretSelectionElementExists__() {
+        /*
+        NOTE:
+        Empty caret selection elements are elements that look like:
+
+        <tag>&ZeroWidthSpace;</tag>.
+
+        They only exist when caret-selection styling has been applied but
+        no text was written inside the generated element. They are expected to be deleted automatically after deselection if left empty.
+
+        Deselection in this context means the caret selection element doesn't
+        have the caret inside it anymore.
+        */
+
+        return this.TEXT_BOX_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_SELECTION_DATA.editedContent !== null && this.TEXT_BOX_SELECTION_DATA.editedContent.innerHTML === '\u200b';
+    };
+
 
 
     // PUBLIC
