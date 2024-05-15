@@ -84,7 +84,14 @@ class RichTextEditor {
             throw TypeError("All RGB values must be a number between 0 and 255");
         }
 
-        if (this.__selectionInTextBoxExists__()) {
+        if (this.TEXT_BOX_SELECTION_DATA.editedContent !== null && COLOR_HELPERS.isColorElement(this.TEXT_BOX_SELECTION_DATA.editedContent)) {
+            // apply color to the existing selection
+
+            const SELECTED_COLOR_ELEMENT: HTMLElement = this.TEXT_BOX_SELECTION_DATA.editedContent;
+
+            $(SELECTED_COLOR_ELEMENT).css('color', `rgb(${r},${g},${b})`);
+        }
+        else if (this.__selectionInTextBoxExists__()) {
             // create color element
             const COLOR_ELEMENT: JQuery<HTMLSpanElement> = $(document.createElement('span'));
             COLOR_ELEMENT.attr('data-type', 'color');
