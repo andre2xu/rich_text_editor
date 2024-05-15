@@ -60,7 +60,7 @@ class RichTextEditor {
                 this.TEXT_BOX_SELECTION_DATA.editedContent = ELEMENT;
 
                 // check if a caret selection was made
-                if (this.__selectionInTextBoxExists__() && this.TEXT_BOX_SELECTION_DATA.selection instanceof Selection && this.TEXT_BOX_SELECTION_DATA.selection.type === 'Caret') {
+                if (this.TEXT_BOX_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_SELECTION_DATA.selection instanceof Selection) {
                     // check if the element, whose reference was saved in the text box selection data, matches the current selection
                     if (this.TEXT_BOX_SELECTION_DATA.selection.anchorNode?.parentElement === ELEMENT) {
                         // remove zero-width space character
