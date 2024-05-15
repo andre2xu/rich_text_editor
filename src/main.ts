@@ -126,6 +126,9 @@ class RichTextEditor {
                 // make caret re-appear inside the color element
                 COLOR_ELEMENT[0].focus();
                 SELECTION_RANGE.collapse();
+
+                // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
+                this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
             }
             else if (SELECTION_TYPE === 'Range') {
                 const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
