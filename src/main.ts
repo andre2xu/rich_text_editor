@@ -46,7 +46,6 @@ class RichTextEditor {
                     this.TEXT_BOX_SELECTION_DATA.editedContent = null;
                 }
 
-                // execute the following when the left mouse button is released
                 this.__updateTextBoxSelectionData__();
             }
         });
