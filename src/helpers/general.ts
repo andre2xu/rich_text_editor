@@ -89,5 +89,6 @@ function mergeSimilarAdjacentChildNodes(parent: HTMLElement) {
 };
 
 export {
+    moveContentsTo,
     mergeSimilarAdjacentChildNodes
 };
