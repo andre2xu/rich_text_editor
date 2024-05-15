@@ -4,6 +4,8 @@ window.addEventListener('load', () => {
     const RTE: RichTextEditor = new RichTextEditor('text-box');
 
     // COLOR PICKER
+    let color_picker_is_visible: boolean = false;
+
     const COLOR_PICKER: HTMLElement | null = document.getElementById('color-picker');
 
     if (COLOR_PICKER !== null && COLOR_PICKER instanceof HTMLInputElement && COLOR_PICKER.type === 'color') {
@@ -24,6 +26,14 @@ window.addEventListener('load', () => {
         // prevent the text box from losing focus (i.e. the selection) when clicking on the color picker
         COLOR_PICKER.addEventListener('mousedown', (event: Event) => {
             event.preventDefault();
+
+            if (color_picker_is_visible) {
+                // hide color picker
+                COLOR_PICKER.type = 'text';
+                COLOR_PICKER.type = 'color';
+            }
+
+            color_picker_is_visible ? color_picker_is_visible = false : color_picker_is_visible = true;
         });
     }
 });
