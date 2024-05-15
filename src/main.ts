@@ -7,7 +7,8 @@ import * as COLOR_HELPERS from './helpers/colors';
 interface TextBoxSelection {
     selection: Selection | null,
     range: Range | null,
-    editedContent: HTMLElement | null
+    editedContent: HTMLElement | null,
+    lastSelectionType: string | null
 };
 
 class RichTextEditor {
@@ -15,7 +16,8 @@ class RichTextEditor {
     TEXT_BOX_SELECTION_DATA: TextBoxSelection = {
         selection: null,
         range: null,
-        editedContent: null // HTML of selection after it has been styled
+        editedContent: null, // HTML of selection after it has been styled
+        lastSelectionType: null // 'Caret' or 'Range'
     };
 
     constructor(textBoxId: string) {
@@ -95,6 +97,7 @@ class RichTextEditor {
         this.TEXT_BOX_SELECTION_DATA.selection = null;
         this.TEXT_BOX_SELECTION_DATA.range = null;
         this.TEXT_BOX_SELECTION_DATA.editedContent = null;
+        this.TEXT_BOX_SELECTION_DATA.lastSelectionType = null;
 
         // check if there is a selection inside of the text box and update the mapping
         const WINDOW_SELECTION: Selection | null = window.getSelection();
@@ -186,6 +189,9 @@ class RichTextEditor {
 
                 // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                 this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
+
+                // save selection type
+                this.TEXT_BOX_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
             }
             else if (SELECTION_TYPE === 'Range') {
                 const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
@@ -220,6 +226,9 @@ class RichTextEditor {
 
                 // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                 this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
+
+                // save selection type
+                this.TEXT_BOX_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
             }
             else {
                 throw TypeError("Invalid selection type");
