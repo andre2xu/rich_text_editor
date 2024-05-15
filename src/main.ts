@@ -67,6 +67,11 @@ class RichTextEditor {
                         // move the caret to the right of the newly-inserted character
                         this.__selectAndPlaceCaretInsideElement__(ELEMENT);
                     }
+
+                    // delete the caret selection element if it's still empty (i.e. a key was pressed but no character was put inside)
+                    if (ELEMENT.innerHTML === '\u200b') {
+                        $(ELEMENT).remove();
+                    }
                 }
             }
         });
