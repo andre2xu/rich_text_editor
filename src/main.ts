@@ -18,8 +18,6 @@ class RichTextEditor {
         editedContent: null // HTML of selection after it has been styled
     };
 
-    TEMP_ID: string = 'temp';
-
     constructor(textBoxId: string) {
         const ELEMENT: HTMLElement | null = document.getElementById(textBoxId);
 
@@ -89,7 +87,6 @@ class RichTextEditor {
         if (this.__selectionInTextBoxExists__()) {
             // create color element
             const COLOR_ELEMENT: JQuery<HTMLSpanElement> = $(document.createElement('span'));
-            COLOR_ELEMENT.attr('id', this.TEMP_ID);
             COLOR_ELEMENT.attr('data-type', 'color');
             COLOR_ELEMENT.css('color', `rgb(${r},${g},${b})`);
 
@@ -126,9 +123,6 @@ class RichTextEditor {
 
                     GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(COLOR_ELEMENT[0]);
                 }
-
-                // delete temporary id
-                $(`#${this.TEMP_ID}`).removeAttr('id');
 
                 // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                 this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
