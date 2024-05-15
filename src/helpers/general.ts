@@ -88,7 +88,23 @@ function mergeSimilarAdjacentChildNodes(parent: HTMLElement) {
     RANGE.insertNode(FRAGMENT);
 };
 
+function deleteAllEmptyDescendants(parent: HTMLElement) {
+    const RANGE: Range = document.createRange();
+    RANGE.selectNodeContents(parent);
+
+    const FRAGMENT: DocumentFragment = RANGE.extractContents();
+
+    $(FRAGMENT).find('*').each((_: number, element: HTMLElement) => {
+        if (element.innerHTML.length === 0) {
+            $(element).remove();
+        }
+    });
+
+    RANGE.insertNode(FRAGMENT);
+};
+
 export {
     moveContentsTo,
-    mergeSimilarAdjacentChildNodes
+    mergeSimilarAdjacentChildNodes,
+    deleteAllEmptyDescendants
 };
