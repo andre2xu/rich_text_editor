@@ -88,6 +88,24 @@ class RichTextEditor {
         }
     };
 
+    __selectAndPlaceCaretInsideElement__(element: HTMLElement) {
+        const CARET_RANGE: Range = document.createRange();
+        CARET_RANGE.selectNode(element);
+
+        const WINDOW_SELECTION: Selection | null = window.getSelection();
+
+        if (WINDOW_SELECTION !== null) {
+            WINDOW_SELECTION.removeAllRanges();
+            WINDOW_SELECTION.addRange(CARET_RANGE);
+
+            // reduce selection to a caret
+            CARET_RANGE.collapse();
+
+            // update text box selection data
+            this.__updateTextBoxSelectionData__();
+        }
+    };
+
 
 
     // PUBLIC
@@ -124,8 +142,7 @@ class RichTextEditor {
                 SELECTION_RANGE.insertNode(COLOR_ELEMENT[0]);
 
                 // make caret re-appear inside the color element
-                COLOR_ELEMENT[0].focus();
-                SELECTION_RANGE.collapse();
+                this.__selectAndPlaceCaretInsideElement__(COLOR_ELEMENT[0]);
 
                 // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                 this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
