@@ -73,6 +73,21 @@ class RichTextEditor {
         return this.TEXT_BOX_SELECTION_DATA.selection !== null && this.TEXT_BOX_SELECTION_DATA.range !== null;
     };
 
+    __selectAndHighlightElement__(element: HTMLElement) {
+        const HIGHLIGHT_RANGE: Range = document.createRange();
+        HIGHLIGHT_RANGE.selectNode(element);
+
+        const WINDOW_SELECTION: Selection | null = window.getSelection();
+
+        if (WINDOW_SELECTION !== null) {
+            WINDOW_SELECTION.removeAllRanges();
+            WINDOW_SELECTION.addRange(HIGHLIGHT_RANGE);
+
+            // update text box selection data
+            this.__updateTextBoxSelectionData__();
+        }
+    };
+
 
 
     // PUBLIC
@@ -130,6 +145,9 @@ class RichTextEditor {
 
                     GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(COLOR_ELEMENT[0]);
                 }
+
+                // highlight selection again
+                this.__selectAndHighlightElement__(COLOR_ELEMENT[0]);
 
                 // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                 this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
