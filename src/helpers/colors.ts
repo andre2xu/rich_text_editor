@@ -34,13 +34,17 @@ function getInnerColorElements(parent: HTMLElement) {
     return $(parent).find(COLOR_ELEMENT_SELECTOR).toArray();
 };
 
-function separateColorElementFromParentColorElement(child: HTMLElement, parent: HTMLElement) {
-    if (isColorElement(child) === false) {
-        throw TypeError("Child element must be a color element");
+function separateColorElementFromParentColorElement(colorElement: HTMLElement, parent: HTMLElement) {
+    if (isColorElement(colorElement) === false) {
+        throw TypeError("Must be a color element");
     }
 
     if (isColorElement(parent) === false) {
         throw TypeError("Parent element must be a color element");
+    }
+
+    if ((parent.compareDocumentPosition(colorElement) & Node.DOCUMENT_POSITION_CONTAINED_BY) === 0) {
+        throw ReferenceError("The given parent element does not contain that color element");
     }
 
     const PARENT_RANGE: Range = document.createRange();
@@ -52,19 +56,19 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
     // split parent contents into 3 slices (left, middle, right); the middle slice is the color element to separate
     const LEFT_SLICE_RANGE: Range = document.createRange();
     LEFT_SLICE_RANGE.setStartBefore(PARENT_FRAGMENT.children[0]);
-    LEFT_SLICE_RANGE.setEndBefore(child);
+    LEFT_SLICE_RANGE.setEndBefore(colorElement);
 
     const MIDDLE_SLICE_RANGE: Range = document.createRange();
-    MIDDLE_SLICE_RANGE.selectNode(child);
+    MIDDLE_SLICE_RANGE.selectNode(colorElement);
 
     const RIGHT_SLICE_RANGE: Range = document.createRange();
-    RIGHT_SLICE_RANGE.setStartAfter(child);
+    RIGHT_SLICE_RANGE.setStartAfter(colorElement);
     RIGHT_SLICE_RANGE.setEndAfter(PARENT_FRAGMENT.children[0]);
 
     // shallow copy the non-color-element parents of the color element
     const NON_COLOR_ELEMENT_PARENTS: Node[] = [];
 
-    $(child).parents().each((_: number, p: HTMLElement) => {
+    $(colorElement).parents().each((_: number, p: HTMLElement) => {
         if (p === parent) {
             // stop looping if the color element parent has been reached
             return false;
