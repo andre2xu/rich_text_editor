@@ -106,6 +106,70 @@ function separateColorElementFromParentColorElement(child: HTMLElement, parent: 
     PARENT_RANGE.insertNode(NEW_PARENT_FRAGMENT);
 };
 
+function separateColorElementFromUnderlineOrStrikethroughAncestorElement(colorElement: HTMLElement, ancestor: HTMLElement) {
+    if (isColorElement(colorElement) === false) {
+        throw TypeError("Must be a color element");
+    }
+
+    if (ancestor.tagName !== 'U' && ancestor.tagName !== 'S') {
+        throw TypeError("The ancestor must be an underline or strikethrough element");
+    }
+
+    if ((ancestor.compareDocumentPosition(colorElement) & Node.DOCUMENT_POSITION_CONTAINED_BY) === 0) {
+        throw ReferenceError("The given ancestor does not contain that color element");
+    }
+
+    const ANCESTOR_RANGE: Range = document.createRange();
+    ANCESTOR_RANGE.selectNode(ancestor);
+
+    const ANCESTOR_FRAGMENT: DocumentFragment = ANCESTOR_RANGE.extractContents();
+
+    // get all the underline/strikethrough ancestors of the color element
+    const ANCESTORS = $(colorElement).parents('u, s');
+
+    // divide the ancestor fragment into 3 fragment slices (left, middle, right); the middle slice contains the color element to separate
+    const LEFT_SLICE_RANGE: Range = document.createRange();
+    LEFT_SLICE_RANGE.setStartBefore(ANCESTOR_FRAGMENT.children[0]);
+    LEFT_SLICE_RANGE.setEndBefore(colorElement);
+
+    const MIDDLE_SLICE_RANGE: Range = document.createRange();
+    MIDDLE_SLICE_RANGE.selectNode(colorElement);
+
+    const RIGHT_SLICE_RANGE: Range = document.createRange();
+    RIGHT_SLICE_RANGE.setStartAfter(colorElement);
+    RIGHT_SLICE_RANGE.setEndAfter(ANCESTOR_FRAGMENT.children[0]);
+
+    // extract the fragment slices
+    const LEFT_SLICE: DocumentFragment = LEFT_SLICE_RANGE.extractContents();
+    const MIDDLE_SLICE: DocumentFragment = MIDDLE_SLICE_RANGE.extractContents();
+    const RIGHT_SLICE: DocumentFragment = RIGHT_SLICE_RANGE.extractContents();
+
+    // wrap the contents of the color element with all the underline/strikethrough ancestors
+    const COLOR_ELEMENT_CONTENTS_RANGE: Range = document.createRange();
+    COLOR_ELEMENT_CONTENTS_RANGE.selectNodeContents(colorElement);
+
+    ANCESTORS.each((_: number, ancestor: HTMLElement) => {
+        COLOR_ELEMENT_CONTENTS_RANGE.surroundContents(ancestor.cloneNode());
+    });
+
+    // create a new ancestor fragment that has the color element separated
+    const NEW_ANCESTOR_FRAGMENT: DocumentFragment = document.createDocumentFragment();
+
+    NEW_ANCESTOR_FRAGMENT.append(LEFT_SLICE);
+    NEW_ANCESTOR_FRAGMENT.append(MIDDLE_SLICE);
+    NEW_ANCESTOR_FRAGMENT.append(RIGHT_SLICE);
+
+    // delete empty elements
+    $(NEW_ANCESTOR_FRAGMENT).find('*').each((_: number, element: HTMLElement) => {
+        if (element.innerHTML.length === 0) {
+            $(element).remove();
+        }
+    });
+
+    // replace the old ancestor fragment with the new one
+    ANCESTOR_RANGE.insertNode(NEW_ANCESTOR_FRAGMENT);
+};
+
 function removeInnerColorElements(parent: HTMLElement) {
     if (isColorElement(parent) === false) {
         throw TypeError("Parent must be a color element");
@@ -132,5 +196,6 @@ export {
     getFurthestUnderlineOrStrikethroughAncestorElement,
     getInnerColorElements,
     separateColorElementFromParentColorElement,
+    separateColorElementFromUnderlineOrStrikethroughAncestorElement,
     removeInnerColorElements
 };

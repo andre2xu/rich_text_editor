@@ -257,7 +257,7 @@ class RichTextEditor {
                 const FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getFurthestUnderlineOrStrikethroughAncestorElement(COLOR_ELEMENT[0]);
 
                 if (FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT !== undefined) {
-                    console.log(FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT);
+                    COLOR_HELPERS.separateColorElementFromUnderlineOrStrikethroughAncestorElement(COLOR_ELEMENT[0], FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT);
                 }
 
                 // get rid of any empty elements left
