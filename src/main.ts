@@ -11,12 +11,21 @@ interface TextBoxSelection {
     lastSelectionType: string | null
 };
 
+interface TextBoxLastSelectionData {
+    lastSelection: HTMLElement | null,
+    lastSelectionType: string | null
+};
+
 class RichTextEditor {
     TEXT_BOX: JQuery<HTMLDivElement>;
     TEXT_BOX_SELECTION_DATA: TextBoxSelection = {
         selection: null,
         range: null,
         editedContent: null, // HTML of selection after it has been styled
+        lastSelectionType: null // 'Caret' or 'Range'
+    };
+    TEXT_BOX_LAST_SELECTION_DATA: TextBoxLastSelectionData = {
+        lastSelection: null, // HTML of selection after it has been styled
         lastSelectionType: null // 'Caret' or 'Range'
     };
 
