@@ -3,6 +3,29 @@ import RichTextEditor from './main';
 window.addEventListener('load', () => {
     const RTE: RichTextEditor = new RichTextEditor('text-box');
 
+
+    // FONT FORMATS
+    const FORMAT_BUTTONS: HTMLElement | null = document.getElementById('font-formats');
+
+    if (FORMAT_BUTTONS instanceof HTMLElement) {
+        FORMAT_BUTTONS.addEventListener('click', (event: MouseEvent) => {
+            const ELEMENT_CLICKED: HTMLElement = event.target as HTMLElement;
+
+            switch (ELEMENT_CLICKED.id) {
+                case 'bold':
+                    break;
+                case 'italic':
+                    break;
+                case 'underline':
+                    break;
+                case 'strikethrough':
+                    break;
+                default:
+            }
+        });
+    }
+
+
     // COLOR PICKER
     let color_picker_is_visible: boolean = false;
 
