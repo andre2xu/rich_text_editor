@@ -72,17 +72,13 @@ class RichTextEditor {
 
         this.TEXT_BOX.on('keyup', (_: JQuery.KeyUpEvent) => {
             if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null) {
-                // copy the HTML of the selection before updating the text box selection data
-                const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
-
-                // update the text box selection data to see what is currently selected
+                // update current selection data
                 this.__updateTextBoxSelectionData__();
-
-                // save the element's reference again in the text box selection data
-                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = ELEMENT;
 
                 // check if a caret selection was made
                 if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_SELECTION_DATA.selection instanceof Selection) {
+                    const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
+
                     // check if the element, whose reference was saved in the text box selection data, matches the current selection
                     if (this.TEXT_BOX_SELECTION_DATA.selection.anchorNode?.parentElement === ELEMENT) {
                         // remove zero-width space character
