@@ -8,9 +8,9 @@ function isColorElement(element: HTMLElement) {
     return element instanceof HTMLSpanElement && element.getAttribute('data-type') === 'color';
 };
 
-function getClosestParentColorElement(child: HTMLElement): HTMLElement | undefined {
-    if (isColorElement(child)) {
-        const PARENT = $(child).parents(COLOR_ELEMENT_SELECTOR).first()[0];
+function getClosestParentColorElement(colorElement: HTMLElement): HTMLElement | undefined {
+    if (isColorElement(colorElement)) {
+        const PARENT = $(colorElement).parents(COLOR_ELEMENT_SELECTOR).first()[0];
 
         return PARENT;
     }
