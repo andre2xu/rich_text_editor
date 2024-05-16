@@ -97,11 +97,20 @@ class RichTextEditor {
                         this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
                     }
                     else if (COLOR_HELPERS.isColorElement(ELEMENT)) {
-                        // check if the caret selection element (a color element) is inside of an existing color element and if so take it out
+                        // check if the caret selection color element is inside of an existing color element and if so take it out
                         const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(ELEMENT);
 
                         if (PARENT_COLOR_ELEMENT !== undefined) {
                             COLOR_HELPERS.separateColorElementFromParentColorElement(ELEMENT, PARENT_COLOR_ELEMENT);
+
+                            this.__selectAndPlaceCaretInsideElement__(ELEMENT);
+                        }
+
+                        // check if the caret selection color element is inside of <u> or <s> elements and if so take it out of the furthest ancestor
+                        const FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getFurthestUnderlineOrStrikethroughAncestorElement(ELEMENT);
+
+                        if (FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT !== undefined) {
+                            COLOR_HELPERS.separateColorElementFromUnderlineOrStrikethroughAncestorElement(ELEMENT, FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT);
 
                             this.__selectAndPlaceCaretInsideElement__(ELEMENT);
                         }
