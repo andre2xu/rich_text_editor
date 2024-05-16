@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import * as GENERAL_HELPERS from './helpers/general';
 import * as COLOR_HELPERS from './helpers/colors';
+import * as FORMAT_HELPERS from './helpers/formats';
 
 
 
@@ -200,6 +201,12 @@ class RichTextEditor {
         */
 
         return this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection.innerHTML === '\u200b';
+    };
+
+    __applyFormat__(formatElement: HTMLElement) {
+        if (FORMAT_HELPERS.isFormatElement(formatElement) === false) {
+            throw TypeError("Format element must be one of the following: <b>, <i>, <u>, <s>");
+        }
     };
 
 
