@@ -78,7 +78,7 @@ class RichTextEditor {
                 this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = ELEMENT;
 
                 // check if a caret selection was made
-                if (this.TEXT_BOX_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_SELECTION_DATA.selection instanceof Selection) {
+                if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_SELECTION_DATA.selection instanceof Selection) {
                     // check if the element, whose reference was saved in the text box selection data, matches the current selection
                     if (this.TEXT_BOX_SELECTION_DATA.selection.anchorNode?.parentElement === ELEMENT) {
                         // remove zero-width space character
@@ -181,7 +181,7 @@ class RichTextEditor {
         have the caret inside it anymore.
         */
 
-        return this.TEXT_BOX_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection.innerHTML === '\u200b';
+        return this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection.innerHTML === '\u200b';
     };
 
 
@@ -226,7 +226,7 @@ class RichTextEditor {
                 this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
 
                 // save selection type
-                this.TEXT_BOX_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
             }
             else if (SELECTION_TYPE === 'Range') {
                 const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
@@ -273,7 +273,7 @@ class RichTextEditor {
                 this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
 
                 // save selection type
-                this.TEXT_BOX_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
             }
             else {
                 throw TypeError("Invalid selection type");
