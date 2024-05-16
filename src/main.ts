@@ -58,13 +58,20 @@ class RichTextEditor {
         });
 
         this.TEXT_BOX.on('mouseenter', (_: JQuery.MouseEnterEvent) => {
-            // check if a caret selection was made and delete the caret selection element if it's empty
             if (this.__emptyCaretSelectionElementExists__()) {
-                $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
+                const DELAY_BEFORE_DELETION: number = 3000; // 3 seconds
 
-                // reset last selection data
-                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
-                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
+                // give the user X seconds before deleting the empty caret selection element after they enter the text box
+                setTimeout(() => {
+                    // if the caret selection element is still empty after the delay then delete it
+                    if (this.__emptyCaretSelectionElementExists__()) {
+                        $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
+
+                        // reset last selection data
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
+                    }
+                }, DELAY_BEFORE_DELETION);
             }
 
             this.__updateTextBoxSelectionData__();
