@@ -18,6 +18,14 @@ function getClosestParentColorElement(child: HTMLElement): HTMLElement | undefin
     throw TypeError("Child element must be a color element");
 };
 
+function getFurthestUnderlineOrStrikethroughAncestorElement(colorElement: HTMLElement): HTMLElement | undefined {
+    if (isColorElement(colorElement) === false) {
+        throw TypeError("Must be a color element");
+    }
+
+    return $(colorElement).parents('u, s').last()[0];
+};
+
 function getInnerColorElements(parent: HTMLElement) {
     if (isColorElement(parent) === false) {
         throw TypeError("Parent must be a color element");
@@ -121,6 +129,7 @@ function removeInnerColorElements(parent: HTMLElement) {
 export {
     isColorElement,
     getClosestParentColorElement,
+    getFurthestUnderlineOrStrikethroughAncestorElement,
     getInnerColorElements,
     separateColorElementFromParentColorElement,
     removeInnerColorElements

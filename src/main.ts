@@ -253,6 +253,13 @@ class RichTextEditor {
                     GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(COLOR_ELEMENT[0]);
                 }
 
+                // check if the new color element is inside of <u> or <s> elements and if so take it out of the furthest ancestor
+                const FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getFurthestUnderlineOrStrikethroughAncestorElement(COLOR_ELEMENT[0]);
+
+                if (FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT !== undefined) {
+                    console.log(FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT);
+                }
+
                 // get rid of any empty elements left
                 GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
 
