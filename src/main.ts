@@ -305,6 +305,22 @@ class RichTextEditor {
             }
         }
     };
+
+    applyBold() {
+        this.__applyFormat__(document.createElement('b'));
+    };
+
+    applyItalic() {
+        this.__applyFormat__(document.createElement('i'));
+    };
+
+    applyUnderline() {
+        this.__applyFormat__(document.createElement('u'));
+    };
+
+    applyStrikethrough() {
+        this.__applyFormat__(document.createElement('s'));
+    };
 };
 
 export default RichTextEditor;
