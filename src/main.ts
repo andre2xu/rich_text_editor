@@ -6,9 +6,7 @@ import * as COLOR_HELPERS from './helpers/colors';
 
 interface TextBoxSelection {
     selection: Selection | null,
-    range: Range | null,
-    editedContent: HTMLElement | null,
-    lastSelectionType: string | null
+    range: Range | null
 };
 
 interface TextBoxLastSelectionData {
@@ -20,9 +18,7 @@ class RichTextEditor {
     TEXT_BOX: JQuery<HTMLDivElement>;
     TEXT_BOX_SELECTION_DATA: TextBoxSelection = {
         selection: null,
-        range: null,
-        editedContent: null, // HTML of selection after it has been styled
-        lastSelectionType: null // 'Caret' or 'Range'
+        range: null
     };
     TEXT_BOX_LAST_SELECTION_DATA: TextBoxLastSelectionData = {
         lastSelection: null, // HTML of selection after it has been styled
@@ -50,9 +46,9 @@ class RichTextEditor {
             if (event.button === 0) {
                 // check if a caret selection was made and delete the caret selection element if it's empty
                 if (this.__emptyCaretSelectionElementExists__()) {
-                    $(this.TEXT_BOX_SELECTION_DATA.editedContent as HTMLElement).remove();
+                    $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
 
-                    this.TEXT_BOX_SELECTION_DATA.editedContent = null;
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
                 }
 
                 this.__updateTextBoxSelectionData__();
@@ -62,24 +58,24 @@ class RichTextEditor {
         this.TEXT_BOX.on('mouseenter', (_: JQuery.MouseEnterEvent) => {
             // check if a caret selection was made and delete the caret selection element if it's empty
             if (this.__emptyCaretSelectionElementExists__()) {
-                $(this.TEXT_BOX_SELECTION_DATA.editedContent as HTMLElement).remove();
+                $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
 
-                this.TEXT_BOX_SELECTION_DATA.editedContent = null;
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
             }
 
             this.__updateTextBoxSelectionData__();
         });
 
         this.TEXT_BOX.on('keyup', (_: JQuery.KeyUpEvent) => {
-            if (this.TEXT_BOX_SELECTION_DATA.editedContent !== null) {
+            if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null) {
                 // copy the HTML of the selection before updating the text box selection data
-                const ELEMENT: HTMLElement = this.TEXT_BOX_SELECTION_DATA.editedContent;
+                const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
 
                 // update the text box selection data to see what is currently selected
                 this.__updateTextBoxSelectionData__();
 
                 // save the element's reference again in the text box selection data
-                this.TEXT_BOX_SELECTION_DATA.editedContent = ELEMENT;
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = ELEMENT;
 
                 // check if a caret selection was made
                 if (this.TEXT_BOX_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_SELECTION_DATA.selection instanceof Selection) {
@@ -96,7 +92,7 @@ class RichTextEditor {
                         // delete the caret selection element if it's still empty (i.e. a key was pressed but no character was put inside)
                         $(ELEMENT).remove();
 
-                        this.TEXT_BOX_SELECTION_DATA.editedContent = null;
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
                     }
                     else if (COLOR_HELPERS.isColorElement(ELEMENT)) {
                         // check if the caret selection element (a color element) is inside of an existing color element and if so take it out
@@ -185,7 +181,7 @@ class RichTextEditor {
         have the caret inside it anymore.
         */
 
-        return this.TEXT_BOX_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_SELECTION_DATA.editedContent !== null && this.TEXT_BOX_SELECTION_DATA.editedContent.innerHTML === '\u200b';
+        return this.TEXT_BOX_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_SELECTION_DATA.lastSelectionType === 'Caret' && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection.innerHTML === '\u200b';
     };
 
 
@@ -199,10 +195,10 @@ class RichTextEditor {
             throw TypeError("All RGB values must be a number between 0 and 255");
         }
 
-        if (this.TEXT_BOX_SELECTION_DATA.editedContent !== null && COLOR_HELPERS.isColorElement(this.TEXT_BOX_SELECTION_DATA.editedContent)) {
+        if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && COLOR_HELPERS.isColorElement(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection)) {
             // apply color to the existing selection
 
-            const SELECTED_COLOR_ELEMENT: HTMLElement = this.TEXT_BOX_SELECTION_DATA.editedContent;
+            const SELECTED_COLOR_ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
 
             $(SELECTED_COLOR_ELEMENT).css('color', `rgb(${r},${g},${b})`);
         }
@@ -227,7 +223,7 @@ class RichTextEditor {
                 this.__selectAndPlaceCaretInsideElement__(COLOR_ELEMENT[0]);
 
                 // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
-                this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
 
                 // save selection type
                 this.TEXT_BOX_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
@@ -274,7 +270,7 @@ class RichTextEditor {
                 this.__selectAndHighlightElement__(COLOR_ELEMENT[0]);
 
                 // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
-                this.TEXT_BOX_SELECTION_DATA.editedContent = COLOR_ELEMENT[0];
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
 
                 // save selection type
                 this.TEXT_BOX_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
