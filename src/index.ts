@@ -13,12 +13,16 @@ window.addEventListener('load', () => {
 
             switch (ELEMENT_CLICKED.id) {
                 case 'bold':
+                    RTE.applyBold();
                     break;
                 case 'italic':
+                    RTE.applyItalic();
                     break;
                 case 'underline':
+                    RTE.applyUnderline();
                     break;
                 case 'strikethrough':
+                    RTE.applyStrikethrough();
                     break;
                 default:
             }
