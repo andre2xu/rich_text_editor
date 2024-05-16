@@ -48,7 +48,9 @@ class RichTextEditor {
                 if (this.__emptyCaretSelectionElementExists__()) {
                     $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
 
+                    // reset last selection data
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
                 }
 
                 this.__updateTextBoxSelectionData__();
@@ -60,7 +62,9 @@ class RichTextEditor {
             if (this.__emptyCaretSelectionElementExists__()) {
                 $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
 
+                // reset last selection data
                 this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
             }
 
             this.__updateTextBoxSelectionData__();
@@ -92,7 +96,9 @@ class RichTextEditor {
                         // delete the caret selection element if it's still empty (i.e. a key was pressed but no character was put inside)
                         $(ELEMENT).remove();
 
+                        // reset last selection data
                         this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
                     }
                     else if (COLOR_HELPERS.isColorElement(ELEMENT)) {
                         // check if the caret selection element (a color element) is inside of an existing color element and if so take it out
