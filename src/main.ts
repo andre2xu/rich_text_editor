@@ -120,8 +120,6 @@ class RichTextEditor {
         // assume there is no selection in the text box
         this.TEXT_BOX_SELECTION_DATA.selection = null;
         this.TEXT_BOX_SELECTION_DATA.range = null;
-        this.TEXT_BOX_SELECTION_DATA.editedContent = null;
-        this.TEXT_BOX_SELECTION_DATA.lastSelectionType = null;
 
         // check if there is a selection inside of the text box and update the mapping
         const WINDOW_SELECTION: Selection | null = window.getSelection();
