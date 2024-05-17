@@ -195,6 +195,7 @@ function removeInnerColorElements(parent: HTMLElement) {
 };
 
 export {
+    COLOR_ELEMENT_SELECTOR,
     isColorElement,
     getClosestParentColorElement,
     getFurthestUnderlineOrStrikethroughAncestorElement,
