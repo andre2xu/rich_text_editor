@@ -207,6 +207,28 @@ class RichTextEditor {
         if (FORMAT_HELPERS.isFormatElement(formatElement) === false) {
             throw TypeError("Format element must be one of the following: <b>, <i>, <u>, <s>");
         }
+
+        if (this.__selectionInTextBoxExists__()) {
+            const FORMAT_ELEMENT: JQuery<HTMLElement> = $(formatElement);
+
+            const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
+
+            if (SELECTION_TYPE === 'Caret') {
+                
+            }
+            else if (SELECTION_TYPE === 'Range') {
+                const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
+
+                // convert selection to a fragment
+                const SELECTED_CONTENTS: DocumentFragment = SELECTION_RANGE.extractContents();
+
+                // put fragment inside of format element
+                FORMAT_ELEMENT.append(SELECTED_CONTENTS);
+
+                // replace selection with formatted contents
+                SELECTION_RANGE.insertNode(FORMAT_ELEMENT[0]);
+            }
+        }
     };
 
 
