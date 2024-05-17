@@ -18,7 +18,18 @@ function getDuplicateDescendants(formatElement: HTMLElement): HTMLElement[] {
     return $(formatElement).find(ELEMENT_TAG).toArray();
 };
 
+function getClosestDuplicateAncestor(formatElement: HTMLElement): HTMLElement | undefined {
+    if (isFormatElement(formatElement) === false) {
+        throw TypeError("Must be a format element");
+    }
+
+    const ELEMENT_TAG: string = formatElement.tagName.toLowerCase();
+
+    return $(formatElement).parents(ELEMENT_TAG).first()[0];
+};
+
 export {
     isFormatElement,
-    getDuplicateDescendants
+    getDuplicateDescendants,
+    getClosestDuplicateAncestor
 };
