@@ -240,6 +240,9 @@ class RichTextEditor {
 
                     GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(FORMAT_ELEMENT[0]);
                 }
+
+                // get rid of any empty elements left
+                GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
             }
         }
     };
