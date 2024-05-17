@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { COLOR_ELEMENT_SELECTOR } from './colors';
 
 
 
@@ -28,8 +29,17 @@ function getClosestDuplicateAncestor(formatElement: HTMLElement): HTMLElement | 
     return $(formatElement).parents(ELEMENT_TAG).first()[0];
 };
 
+function getInnerColorElements(formatElement: HTMLElement): HTMLElement[] {
+    if (isFormatElement(formatElement) === false) {
+        throw TypeError("Must be a format element");
+    }
+
+    return $(formatElement).find(COLOR_ELEMENT_SELECTOR).toArray();
+};
+
 export {
     isFormatElement,
     getDuplicateDescendants,
-    getClosestDuplicateAncestor
+    getClosestDuplicateAncestor,
+    getInnerColorElements
 };
