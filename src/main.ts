@@ -228,21 +228,34 @@ class RichTextEditor {
                 // replace selection with formatted contents
                 SELECTION_RANGE.insertNode(FORMAT_ELEMENT[0]);
 
-                // check if the new format element has descendants with the same tag and if so remove them but keep their contents
-                const DUPLICATE_DESCENDANTS: HTMLElement[] = FORMAT_HELPERS.getDuplicateDescendants(FORMAT_ELEMENT[0]);
+                // check if the new format element is inside of an ancestor format element with the same tag and if so undo the formatting
+                const CLOSEST_DUPLICATE_ANCESTOR: HTMLElement | undefined = FORMAT_HELPERS.getClosestDuplicateAncestor(FORMAT_ELEMENT[0]);
 
-                if (DUPLICATE_DESCENDANTS.length > 0) {
-                    $(DUPLICATE_DESCENDANTS).each((_: number, element: HTMLElement) => {
-                        const DESCENDANT: JQuery<HTMLElement> = $(element);
+                if (CLOSEST_DUPLICATE_ANCESTOR === undefined) {
+                    // check if the new format element has descendants with the same tag and if so remove them but keep their contents
+                    const DUPLICATE_DESCENDANTS: HTMLElement[] = FORMAT_HELPERS.getDuplicateDescendants(FORMAT_ELEMENT[0]);
 
-                        DESCENDANT.replaceWith(DESCENDANT.contents());
-                    });
+                    if (DUPLICATE_DESCENDANTS.length > 0) {
+                        $(DUPLICATE_DESCENDANTS).each((_: number, element: HTMLElement) => {
+                            const DESCENDANT: JQuery<HTMLElement> = $(element);
 
-                    GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(FORMAT_ELEMENT[0]);
+                            DESCENDANT.replaceWith(DESCENDANT.contents());
+                        });
+
+                        GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(FORMAT_ELEMENT[0]);
+                    }
+
+                    // get rid of any empty elements left
+                    GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
                 }
+                else {
+                    // undo formatting
+                    const PARENT: HTMLElement = FORMAT_ELEMENT.parent()[0];
 
-                // get rid of any empty elements left
-                GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
+                    FORMAT_ELEMENT.replaceWith(FORMAT_ELEMENT.contents());
+
+                    GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
+                }
             }
         }
     };
