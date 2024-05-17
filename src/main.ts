@@ -267,6 +267,9 @@ class RichTextEditor {
                     GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
                 }
             }
+            else {
+                throw TypeError("Invalid selection type");
+            }
         }
     };
 
