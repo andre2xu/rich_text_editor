@@ -232,7 +232,13 @@ class RichTextEditor {
                 const DUPLICATE_DESCENDANTS: HTMLElement[] = FORMAT_HELPERS.getDuplicateDescendants(FORMAT_ELEMENT[0]);
 
                 if (DUPLICATE_DESCENDANTS.length > 0) {
-                    
+                    $(DUPLICATE_DESCENDANTS).each((_: number, element: HTMLElement) => {
+                        const DESCENDANT: JQuery<HTMLElement> = $(element);
+
+                        DESCENDANT.replaceWith(DESCENDANT.contents());
+                    });
+
+                    GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(FORMAT_ELEMENT[0]);
                 }
             }
         }
