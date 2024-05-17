@@ -5,7 +5,7 @@ import * as FORMAT_HELPERS from './helpers/formats';
 
 
 
-interface TextBoxSelection {
+interface TextBoxSelectionData {
     selection: Selection | null,
     range: Range | null
 };
@@ -17,7 +17,7 @@ interface TextBoxLastSelectionData {
 
 class RichTextEditor {
     TEXT_BOX: JQuery<HTMLDivElement>;
-    TEXT_BOX_SELECTION_DATA: TextBoxSelection = {
+    TEXT_BOX_SELECTION_DATA: TextBoxSelectionData = {
         selection: null,
         range: null
     };
