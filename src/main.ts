@@ -251,6 +251,8 @@ class RichTextEditor {
 
                     if ((ELEMENT_TAG === 'u' || ELEMENT_TAG === 's') && INNER_COLOR_ELEMENTS.length > 0) {
                         FORMAT_HELPERS.separateInnerColorElementsFromParentFormatElement(FORMAT_ELEMENT[0]);
+
+                        GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(FORMAT_ELEMENT[0]);
                     };
 
                     // get rid of any empty elements left
