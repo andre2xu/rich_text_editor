@@ -227,6 +227,13 @@ class RichTextEditor {
 
                 // replace selection with formatted contents
                 SELECTION_RANGE.insertNode(FORMAT_ELEMENT[0]);
+
+                // check if the new format element has descendants with the same tag and if so remove them but keep their contents
+                const DUPLICATE_DESCENDANTS: HTMLElement[] = FORMAT_HELPERS.getDuplicateDescendants(FORMAT_ELEMENT[0]);
+
+                if (DUPLICATE_DESCENDANTS.length > 0) {
+                    
+                }
             }
         }
     };
