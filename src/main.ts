@@ -251,6 +251,15 @@ class RichTextEditor {
 
                     // get rid of any empty elements left
                     GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
+
+                    // highlight selection again
+                    this.__selectAndHighlightElement__(FORMAT_ELEMENT[0]);
+
+                    // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = FORMAT_ELEMENT[0];
+
+                    // save selection type
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
                 }
                 else {
                     // undo formatting
