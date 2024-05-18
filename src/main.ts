@@ -48,13 +48,13 @@ class RichTextEditor {
                 // check if a caret selection was made and delete the caret selection element if it's empty
                 if (this.__emptyCaretSelectionElementExists__()) {
                     $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
-
-                    // reset last selection data
-                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
-                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
                 }
 
                 this.__updateTextBoxSelectionData__();
+
+                // reset last selection data
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
             }
         });
 
