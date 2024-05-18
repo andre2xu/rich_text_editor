@@ -255,7 +255,7 @@ class RichTextEditor {
                     // highlight selection again
                     this.__selectAndHighlightElement__(FORMAT_ELEMENT[0]);
 
-                    // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
+                    // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = FORMAT_ELEMENT[0];
 
                     // save selection type
