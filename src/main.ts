@@ -229,8 +229,12 @@ class RichTextEditor {
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
                 }
                 else {
-                    // make caret re-appear
-                    this.__selectAndPlaceCaretInsideElement__(ANCESTOR_FORMAT_ELEMENT_WITH_SAME_TAG);
+                    // make caret re-appear at the same spot
+                    const WINDOW_SELECTION: Selection = window.getSelection() as Selection;
+
+                    WINDOW_SELECTION.removeAllRanges();
+
+                    WINDOW_SELECTION.addRange(this.TEXT_BOX_SELECTION_DATA.range as Range);
                 }
             }
             else if (SELECTION_TYPE === 'Range') {
