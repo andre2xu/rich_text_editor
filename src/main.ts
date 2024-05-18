@@ -52,7 +52,7 @@ class RichTextEditor {
 
                 this.__updateTextBoxSelectionData__();
 
-                this.__clearTextBoxLastSelectionData__();
+                this.clearTextBoxLastSelectionData();
             }
         });
 
@@ -66,7 +66,7 @@ class RichTextEditor {
                     if (this.__emptyCaretSelectionElementExists__()) {
                         $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
 
-                        this.__clearTextBoxLastSelectionData__();
+                        this.clearTextBoxLastSelectionData();
                     }
                 }, DELAY_BEFORE_DELETION);
             }
@@ -96,7 +96,7 @@ class RichTextEditor {
                         // delete the caret selection element if it's still empty (i.e. a key was pressed but no character was put inside)
                         $(ELEMENT).remove();
 
-                        this.__clearTextBoxLastSelectionData__();
+                        this.clearTextBoxLastSelectionData();
                     }
                     else if (COLOR_HELPERS.isColorElement(ELEMENT)) {
                         // check if the caret selection color element is inside of an existing color element and if so take it out
@@ -141,11 +141,6 @@ class RichTextEditor {
                 this.TEXT_BOX_SELECTION_DATA.range = WINDOW_SELECTION.getRangeAt(0);
             }
         }
-    };
-
-    __clearTextBoxLastSelectionData__() {
-        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
-        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
     };
 
     __selectionInTextBoxExists__() {
@@ -275,6 +270,11 @@ class RichTextEditor {
 
 
     // PUBLIC
+    clearTextBoxLastSelectionData() {
+        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
+        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
+    };
+
     applyColor(r: number, g: number, b: number) {
         // validate RGB values
         const ARGS: number[] = [r, g, b];
