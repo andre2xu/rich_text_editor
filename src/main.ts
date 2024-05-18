@@ -208,21 +208,30 @@ class RichTextEditor {
             const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
 
             if (SELECTION_TYPE === 'Caret') {
-                const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
+                // check if the new format element is going to be inside a format element with the same tag and if so do not apply the formatting
+                const ANCESTOR_FORMAT_ELEMENT_WITH_SAME_TAG: HTMLElement | undefined = $(this.TEXT_BOX_SELECTION_DATA.selection?.anchorNode as Node).parents(formatElement.tagName).first()[0] as HTMLElement;
 
-                // add a zero-width space character to the empty format element so that it can be focused
-                FORMAT_ELEMENT.append(document.createTextNode('\u200b'));
+                if (ANCESTOR_FORMAT_ELEMENT_WITH_SAME_TAG === undefined) {
+                    const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
 
-                SELECTION_RANGE.insertNode(FORMAT_ELEMENT[0]);
+                    // add a zero-width space character to the empty format element so that it can be focused
+                    FORMAT_ELEMENT.append(document.createTextNode('\u200b'));
 
-                // make caret re-appear inside the format element
-                this.__selectAndPlaceCaretInsideElement__(FORMAT_ELEMENT[0]);
+                    SELECTION_RANGE.insertNode(FORMAT_ELEMENT[0]);
 
-                // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
-                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = FORMAT_ELEMENT[0];
+                    // make caret re-appear inside the format element
+                    this.__selectAndPlaceCaretInsideElement__(FORMAT_ELEMENT[0]);
 
-                // save selection type
-                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+                    // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = FORMAT_ELEMENT[0];
+
+                    // save selection type
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+                }
+                else {
+                    // make caret re-appear
+                    this.__selectAndPlaceCaretInsideElement__(ANCESTOR_FORMAT_ELEMENT_WITH_SAME_TAG);
+                }
             }
             else if (SELECTION_TYPE === 'Range') {
                 const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
