@@ -202,7 +202,24 @@ class RichTextEditor {
             throw TypeError("Format element must be one of the following: <b>, <i>, <u>, <s>");
         }
 
-        if (this.__selectionInTextBoxExists__()) {
+        if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
+            // apply new format to the existing selection
+
+            const RANGE: Range = document.createRange();
+            RANGE.selectNode(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
+            RANGE.surroundContents(formatElement);
+
+            if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
+                RANGE.collapse();
+            }
+
+            const WINDOW_SELECTION: Selection = window.getSelection() as Selection;
+            WINDOW_SELECTION.removeAllRanges();
+            WINDOW_SELECTION.addRange(RANGE);
+
+            this.__updateTextBoxSelectionData__();
+        }
+        else if (this.__selectionInTextBoxExists__()) {
             const FORMAT_ELEMENT: JQuery<HTMLElement> = $(formatElement);
 
             const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
