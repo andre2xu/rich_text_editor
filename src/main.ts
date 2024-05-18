@@ -84,7 +84,7 @@ class RichTextEditor {
                     const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
 
                     // check if the element, whose reference was saved in the text box selection data, matches the current selection
-                    if (this.TEXT_BOX_SELECTION_DATA.selection.anchorNode?.parentElement === ELEMENT) {
+                    if (this.TEXT_BOX_SELECTION_DATA.selection.anchorNode?.parentElement === ELEMENT && ELEMENT.innerText.indexOf('\u200b') !== -1) {
                         // remove zero-width space character
                         ELEMENT.innerHTML = ELEMENT.innerHTML.replace('\u200b', '');
 
