@@ -208,7 +208,21 @@ class RichTextEditor {
             const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
 
             if (SELECTION_TYPE === 'Caret') {
-                
+                const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
+
+                // add a zero-width space character to the empty format element so that it can be focused
+                FORMAT_ELEMENT.append(document.createTextNode('\u200b'));
+
+                SELECTION_RANGE.insertNode(FORMAT_ELEMENT[0]);
+
+                // make caret re-appear inside the format element
+                this.__selectAndPlaceCaretInsideElement__(FORMAT_ELEMENT[0]);
+
+                // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = FORMAT_ELEMENT[0];
+
+                // save selection type
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
             }
             else if (SELECTION_TYPE === 'Range') {
                 const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
