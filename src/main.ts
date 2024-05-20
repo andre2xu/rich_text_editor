@@ -204,20 +204,35 @@ class RichTextEditor {
 
         if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
             // apply new format to the existing selection
-
             const RANGE: Range = document.createRange();
             RANGE.selectNode(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
             RANGE.surroundContents(formatElement);
 
-            if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
-                RANGE.collapse();
+            // check if the new format element has descendants with the same tag and if so remove them but keep their contents
+            const DUPLICATE_DESCENDANTS: HTMLElement[] = FORMAT_HELPERS.getDuplicateDescendants(formatElement);
+
+            if (DUPLICATE_DESCENDANTS.length > 0) {
+                $(DUPLICATE_DESCENDANTS).each((_: number, element: HTMLElement) => {
+                    const DESCENDANT: JQuery<HTMLElement> = $(element);
+
+                    DESCENDANT.replaceWith(DESCENDANT.contents());
+                });
+
+                GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(formatElement);
             }
 
-            const WINDOW_SELECTION: Selection = window.getSelection() as Selection;
-            WINDOW_SELECTION.removeAllRanges();
-            WINDOW_SELECTION.addRange(RANGE);
+            // focus on or highlight the new format element
+            const SELECTION_TYPE: string = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType;
 
-            this.__updateTextBoxSelectionData__();
+            if (SELECTION_TYPE === 'Caret') {
+                this.__selectAndPlaceCaretInsideElement__(formatElement);
+            }
+            else if (SELECTION_TYPE === 'Range') {
+                this.__selectAndHighlightElement__(formatElement);
+            }
+
+            // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
+            this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
         }
         else if (this.__selectionInTextBoxExists__()) {
             const FORMAT_ELEMENT: JQuery<HTMLElement> = $(formatElement);
