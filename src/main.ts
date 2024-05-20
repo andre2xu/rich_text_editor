@@ -74,7 +74,12 @@ class RichTextEditor {
             this.__updateTextBoxSelectionData__();
         });
 
-        this.TEXT_BOX.on('keyup', (_: JQuery.KeyUpEvent) => {
+        this.TEXT_BOX.on('keyup', (event: JQuery.KeyUpEvent) => {
+            // check if arrow keys are being used to move the caret and if so update the selection data to account for its new position
+            if (event.key.indexOf('Arrow') !== -1) {
+                this.__updateTextBoxSelectionData__();
+            }
+
             if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
                 // update current selection data
                 this.__updateTextBoxSelectionData__();
