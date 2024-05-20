@@ -117,7 +117,22 @@ class RichTextEditor {
                             this.__selectAndPlaceCaretInsideElement__(ELEMENT);
                         }
                     }
+
+                    // caret moved because of newly added text so update the selection data to keep track of its new position
+                    const NEW_CARET_POSITION_RANGE: Range = document.createRange();
+                    NEW_CARET_POSITION_RANGE.selectNodeContents(ELEMENT);
+                    NEW_CARET_POSITION_RANGE.collapse();
+
+                    const WINDOW_SELECTION: Selection = window.getSelection() as Selection;
+                    WINDOW_SELECTION.removeAllRanges();
+                    WINDOW_SELECTION.addRange(NEW_CARET_POSITION_RANGE);
+
+                    this.TEXT_BOX_SELECTION_DATA.selection = WINDOW_SELECTION;
+                    this.TEXT_BOX_SELECTION_DATA.range = WINDOW_SELECTION.getRangeAt(0);
                 }
+
+                // make the existing selected element unmodifiable since it now has text
+                this.clearTextBoxLastSelectionData();
             }
         });
     };
