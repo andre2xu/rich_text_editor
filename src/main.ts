@@ -75,12 +75,12 @@ class RichTextEditor {
         });
 
         this.TEXT_BOX.on('keyup', (_: JQuery.KeyUpEvent) => {
-            if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null) {
+            if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
                 // update current selection data
                 this.__updateTextBoxSelectionData__();
 
                 // check if a caret selection was made
-                if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
+                if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
                     const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
 
                     // check if the caret selection element has a zero-width space character
