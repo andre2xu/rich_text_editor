@@ -448,9 +448,6 @@ class RichTextEditor {
                     // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
                 }
-
-                // get rid of any empty elements left
-                GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
             }
         }
         else if (this.__selectionInTextBoxExists__()) {
