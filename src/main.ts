@@ -406,6 +406,9 @@ class RichTextEditor {
                 if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
                     // modify color of range-selected color element
                     $(SELECTED_ELEMENT).css('color', `rgb(${r},${g},${b})`);
+
+                    // highlight selection again
+                    this.__selectAndHighlightElement__(SELECTED_ELEMENT);
                 }
                 else {
                     // add color to other range-selected elements
@@ -435,6 +438,9 @@ class RichTextEditor {
                     if (FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT !== undefined) {
                         COLOR_HELPERS.separateColorElementFromUnderlineOrStrikethroughAncestorElement(COLOR_ELEMENT[0], FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT);
                     }
+
+                    // get rid of any empty elements left
+                    GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
 
                     // highlight selection again
                     this.__selectAndHighlightElement__(COLOR_ELEMENT[0]);
