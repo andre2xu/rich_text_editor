@@ -88,6 +88,8 @@ class RichTextEditor {
                 if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
                     const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
 
+                    let element_with_caret: HTMLElement = ELEMENT;
+
                     // check if the caret selection element has a zero-width space character
                     if (ELEMENT.innerHTML.indexOf('\u200b') !== -1) {
                         // remove zero-width space character
@@ -122,10 +124,26 @@ class RichTextEditor {
                             this.__selectAndPlaceCaretInsideElement__(ELEMENT);
                         }
                     }
+                    else if (FORMAT_HELPERS.isFormatElement(ELEMENT)) {
+                        const FORMAT_ELEMENT: JQuery<HTMLElement> = $(ELEMENT);
+
+                        // check if the new format element is inside of an ancestor format element with the same tag and if so undo the formatting
+                        const CLOSEST_DUPLICATE_ANCESTOR: HTMLElement | undefined = FORMAT_HELPERS.getClosestDuplicateAncestor(ELEMENT);
+
+                        if (CLOSEST_DUPLICATE_ANCESTOR !== undefined) {
+                            const PARENT: HTMLElement = ELEMENT.parentElement as HTMLElement;
+
+                            FORMAT_ELEMENT.replaceWith(FORMAT_ELEMENT.contents());
+
+                            GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
+
+                            element_with_caret = PARENT;
+                        }
+                    }
 
                     // caret moved because of newly added text so update the selection data to keep track of its new position
                     const NEW_CARET_POSITION_RANGE: Range = document.createRange();
-                    NEW_CARET_POSITION_RANGE.selectNodeContents(ELEMENT);
+                    NEW_CARET_POSITION_RANGE.selectNodeContents(element_with_caret);
                     NEW_CARET_POSITION_RANGE.collapse();
 
                     const WINDOW_SELECTION: Selection = window.getSelection() as Selection;
