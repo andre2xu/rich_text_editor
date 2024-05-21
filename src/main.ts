@@ -223,36 +223,70 @@ class RichTextEditor {
         }
 
         if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
-            // apply new format to the existing selection
-            const RANGE: Range = document.createRange();
-            RANGE.selectNode(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
-            RANGE.surroundContents(formatElement);
-
-            // check if the new format element has descendants with the same tag and if so remove them but keep their contents
-            const DUPLICATE_DESCENDANTS: HTMLElement[] = FORMAT_HELPERS.getDuplicateDescendants(formatElement);
-
-            if (DUPLICATE_DESCENDANTS.length > 0) {
-                $(DUPLICATE_DESCENDANTS).each((_: number, element: HTMLElement) => {
-                    const DESCENDANT: JQuery<HTMLElement> = $(element);
-
-                    DESCENDANT.replaceWith(DESCENDANT.contents());
-                });
-
-                GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(formatElement);
-            }
-
-            // focus on or highlight the new format element
+            const SELECTED_ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
             const SELECTION_TYPE: string = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType;
 
             if (SELECTION_TYPE === 'Caret') {
+                // this block only fires when the caret selection element is still empty (because 'keyup' event handler resets last selection data if text was written)
+
+                const RANGE: Range = document.createRange();
+                RANGE.selectNodeContents(SELECTED_ELEMENT);
+                RANGE.surroundContents(formatElement);
+
+                // NOTE: no need to process because the 'keyup' event handler will do it once text is added
+
                 this.__selectAndPlaceCaretInsideElement__(formatElement);
+
+                // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
+                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
             }
             else if (SELECTION_TYPE === 'Range') {
-                this.__selectAndHighlightElement__(formatElement);
-            }
+                const RANGE: Range = document.createRange();
 
-            // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
-            this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
+                if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
+                    RANGE.selectNodeContents(SELECTED_ELEMENT);
+                    RANGE.surroundContents(formatElement);
+
+                    // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
+                }
+                else {
+                    RANGE.selectNode(SELECTED_ELEMENT);
+                    RANGE.surroundContents(formatElement);
+
+                    // check if the new format element has descendants with the same tag and if so remove them but keep their contents
+                    const DUPLICATE_DESCENDANTS: HTMLElement[] = FORMAT_HELPERS.getDuplicateDescendants(formatElement);
+
+                    if (DUPLICATE_DESCENDANTS.length > 0) {
+                        $(DUPLICATE_DESCENDANTS).each((_: number, element: HTMLElement) => {
+                            const DESCENDANT: JQuery<HTMLElement> = $(element);
+
+                            DESCENDANT.replaceWith(DESCENDANT.contents());
+                        });
+
+                        GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(formatElement);
+                    }
+
+                    // check if the new format element is an underline/strikethrough and if it has color element descendants, if so, separate them from the new format element
+                    const ELEMENT_TAG: string = formatElement.tagName.toLowerCase();
+                    const INNER_COLOR_ELEMENTS: HTMLElement[] = FORMAT_HELPERS.getInnerColorElements(formatElement);
+
+                    if ((ELEMENT_TAG === 'u' || ELEMENT_TAG === 's') && INNER_COLOR_ELEMENTS.length > 0) {
+                        FORMAT_HELPERS.separateInnerColorElementsFromParentFormatElement(formatElement);
+
+                        GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(formatElement);
+                    };
+
+                    // get rid of any empty elements left
+                    GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
+
+                    // highlight selection again
+                    this.__selectAndHighlightElement__(formatElement);
+
+                    // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
+                }
+            }
         }
         else if (this.__selectionInTextBoxExists__()) {
             const FORMAT_ELEMENT: JQuery<HTMLElement> = $(formatElement);
