@@ -233,7 +233,14 @@ class RichTextEditor {
                 RANGE.selectNodeContents(SELECTED_ELEMENT);
                 RANGE.surroundContents(formatElement);
 
-                // NOTE: no need to process because the 'keyup' event handler will do it once text is added
+                if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
+                    // check if the new color element is inside of an existing one and if so take it out
+                    const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(SELECTED_ELEMENT);
+
+                    if (PARENT_COLOR_ELEMENT !== undefined) {
+                        COLOR_HELPERS.separateColorElementFromParentColorElement(SELECTED_ELEMENT, PARENT_COLOR_ELEMENT);
+                    }
+                }
 
                 this.__selectAndPlaceCaretInsideElement__(formatElement);
 
