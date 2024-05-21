@@ -400,7 +400,7 @@ class RichTextEditor {
 
                     // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
-                    }
+                }
             }
             else if (SELECTION_TYPE === 'Range') {
                 if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
