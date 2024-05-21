@@ -371,19 +371,83 @@ class RichTextEditor {
             throw TypeError("All RGB values must be a number between 0 and 255");
         }
 
-        if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && COLOR_HELPERS.isColorElement(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection)) {
-            // apply color to the existing selection
+        // create color element
+        const COLOR_ELEMENT: JQuery<HTMLSpanElement> = $(document.createElement('span'));
+        COLOR_ELEMENT.attr('data-type', 'color');
+        COLOR_ELEMENT.css('color', `rgb(${r},${g},${b})`);
 
-            const SELECTED_COLOR_ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
+        if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
+            const SELECTED_ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
+            const SELECTION_TYPE: string = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType;
 
-            $(SELECTED_COLOR_ELEMENT).css('color', `rgb(${r},${g},${b})`);
+            if (SELECTION_TYPE === 'Caret') {
+                // this block only fires when the caret selection element is still empty (because 'keyup' event handler resets last selection data if text was written)
+
+                if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
+                    // modify color of caret-selected color element
+                    $(SELECTED_ELEMENT).css('color', `rgb(${r},${g},${b})`);
+                }
+                else {
+                    // add color to other caret-selected elements
+                    const RANGE: Range = document.createRange();
+                    RANGE.selectNode(SELECTED_ELEMENT);
+                    RANGE.surroundContents(COLOR_ELEMENT[0]);
+
+                    // NOTE: no need to process because the 'keyup' event handler will do it once text is added
+
+                    // make caret re-appear inside the color element
+                    this.__selectAndPlaceCaretInsideElement__(COLOR_ELEMENT[0]);
+
+                    // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
+                    }
+            }
+            else if (SELECTION_TYPE === 'Range') {
+                if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
+                    // modify color of range-selected color element
+                    $(SELECTED_ELEMENT).css('color', `rgb(${r},${g},${b})`);
+                }
+                else {
+                    // add color to other range-selected elements
+                    const RANGE: Range = document.createRange();
+                    RANGE.selectNode(SELECTED_ELEMENT);
+                    RANGE.surroundContents(COLOR_ELEMENT[0]);
+
+                    // check if the new color element is inside of an existing one and if so take it out
+                    const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(COLOR_ELEMENT[0]);
+
+                    if (PARENT_COLOR_ELEMENT !== undefined) {
+                        COLOR_HELPERS.separateColorElementFromParentColorElement(COLOR_ELEMENT[0], PARENT_COLOR_ELEMENT);
+                    }
+
+                    // check if the new color element has inner color elements and if so remove them leaving only their contents
+                    const INNER_COLOR_ELEMENTS: HTMLElement[] = COLOR_HELPERS.getInnerColorElements(COLOR_ELEMENT[0]);
+
+                    if (INNER_COLOR_ELEMENTS.length > 0) {
+                        COLOR_HELPERS.removeInnerColorElements(COLOR_ELEMENT[0]);
+
+                        GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(COLOR_ELEMENT[0]);
+                    }
+
+                    // check if the new color element is inside of <u> or <s> elements and if so take it out of the furthest ancestor
+                    const FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getFurthestUnderlineOrStrikethroughAncestorElement(COLOR_ELEMENT[0]);
+
+                    if (FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT !== undefined) {
+                        COLOR_HELPERS.separateColorElementFromUnderlineOrStrikethroughAncestorElement(COLOR_ELEMENT[0], FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT);
+                    }
+
+                    // highlight selection again
+                    this.__selectAndHighlightElement__(COLOR_ELEMENT[0]);
+
+                    // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
+                }
+
+                // get rid of any empty elements left
+                GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
+            }
         }
         else if (this.__selectionInTextBoxExists__()) {
-            // create color element
-            const COLOR_ELEMENT: JQuery<HTMLSpanElement> = $(document.createElement('span'));
-            COLOR_ELEMENT.attr('data-type', 'color');
-            COLOR_ELEMENT.css('color', `rgb(${r},${g},${b})`);
-
             // apply color to selection
             const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
 
