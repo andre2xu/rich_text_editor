@@ -141,17 +141,17 @@ class RichTextEditor {
                         }
                     }
 
+                    // find the element with the text since it should have the caret (by default, 'element_with_caret' is assumed to have the text)
+                    $(element_with_caret).find('*').each((_: number, element: HTMLElement) => {
+                        if (element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE) {
+                            element_with_caret = element;
+                        }
+                    });
+
                     // caret moved because of newly added text so update the selection data to keep track of its new position
-                    const NEW_CARET_POSITION_RANGE: Range = document.createRange();
-                    NEW_CARET_POSITION_RANGE.selectNodeContents(element_with_caret);
-                    NEW_CARET_POSITION_RANGE.collapse();
+                    this.__selectAndPlaceCaretInsideElement__(element_with_caret);
 
-                    const WINDOW_SELECTION: Selection = window.getSelection() as Selection;
-                    WINDOW_SELECTION.removeAllRanges();
-                    WINDOW_SELECTION.addRange(NEW_CARET_POSITION_RANGE);
-
-                    this.TEXT_BOX_SELECTION_DATA.selection = WINDOW_SELECTION;
-                    this.TEXT_BOX_SELECTION_DATA.range = WINDOW_SELECTION.getRangeAt(0);
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = element_with_caret;
                 }
 
                 // make the existing selected element unmodifiable since it now has text
