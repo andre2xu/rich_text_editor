@@ -58,7 +58,7 @@ class RichTextEditor {
 
         this.TEXT_BOX.on('mouseenter', (_: JQuery.MouseEnterEvent) => {
             if (this.__emptyCaretSelectionElementExists__()) {
-                const DELAY_BEFORE_DELETION: number = 3000; // 3 seconds
+                const DELAY_BEFORE_DELETION: number = 5000; // 3 seconds
 
                 // give the user X seconds before deleting the empty caret selection element after they enter the text box
                 setTimeout(() => {
