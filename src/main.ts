@@ -56,6 +56,11 @@ class RichTextEditor {
             }
         });
 
+        this.TEXT_BOX.on('mousedown', (_: JQuery.MouseDownEvent) => {
+            // this is for resetting the selection when clicking on a highlighted text so that it registers as a caret selection instead of a range
+            window.getSelection()?.removeAllRanges();
+        });
+
         this.TEXT_BOX.on('mouseenter', (_: JQuery.MouseEnterEvent) => {
             if (this.__emptyCaretSelectionElementExists__()) {
                 const DELAY_BEFORE_DELETION: number = 5000; // 3 seconds
