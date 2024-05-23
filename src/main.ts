@@ -445,6 +445,8 @@ class RichTextEditor {
                 if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
                     // modify color of caret-selected color element
                     $(SELECTED_ELEMENT).css('color', `rgb(${r},${g},${b})`);
+
+                    this.__selectAndPlaceCaretInsideElement__(SELECTED_ELEMENT);
                 }
                 else {
                     // add color to other caret-selected elements
