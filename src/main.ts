@@ -174,7 +174,11 @@ class RichTextEditor {
         if (WINDOW_SELECTION !== null && WINDOW_SELECTION.anchorNode !== null && WINDOW_SELECTION.focusNode !== null) {
             const TEXT_BOX_ELEMENT: HTMLDivElement = this.TEXT_BOX[0];
 
-            if (TEXT_BOX_ELEMENT.compareDocumentPosition(WINDOW_SELECTION.anchorNode) & Node.DOCUMENT_POSITION_CONTAINED_BY && TEXT_BOX_ELEMENT.compareDocumentPosition(WINDOW_SELECTION.focusNode) & Node.DOCUMENT_POSITION_CONTAINED_BY) {
+            const SELECTION_INSIDE_TEXT_BOX: number = TEXT_BOX_ELEMENT.compareDocumentPosition(WINDOW_SELECTION.anchorNode) & Node.DOCUMENT_POSITION_CONTAINED_BY && TEXT_BOX_ELEMENT.compareDocumentPosition(WINDOW_SELECTION.focusNode) & Node.DOCUMENT_POSITION_CONTAINED_BY;
+
+            const SELECTION_IS_TEXT_BOX: boolean = WINDOW_SELECTION.anchorNode === TEXT_BOX_ELEMENT && WINDOW_SELECTION.focusNode === TEXT_BOX_ELEMENT;
+
+            if (SELECTION_INSIDE_TEXT_BOX || SELECTION_IS_TEXT_BOX) {
                 this.TEXT_BOX_SELECTION_DATA.selection = WINDOW_SELECTION;
                 this.TEXT_BOX_SELECTION_DATA.range = WINDOW_SELECTION.getRangeAt(0);
             }
