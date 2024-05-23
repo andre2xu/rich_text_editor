@@ -80,19 +80,17 @@ class RichTextEditor {
         });
 
         this.TEXT_BOX.on('keyup', (event: JQuery.KeyUpEvent) => {
+            // update current selection data
+            this.__updateTextBoxSelectionData__();
+
             // check if arrow keys are being used to move the caret and if so update the selection data to account for its new position
             if (event.key.indexOf('Arrow') !== -1) {
-                this.__updateTextBoxSelectionData__();
-
                 if (event.key === 'ArrowRight' && this.TEXT_BOX_LAST_SELECTION_DATA?.lastSelectionType === 'Range' && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection instanceof HTMLElement) {
                     this.__selectAndPlaceCaretInsideElement__(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
                 }
             }
 
             if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
-                // update current selection data
-                this.__updateTextBoxSelectionData__();
-
                 // check if a caret selection was made
                 if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
                     const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
