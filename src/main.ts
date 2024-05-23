@@ -202,7 +202,7 @@ class RichTextEditor {
 
     __selectAndPlaceCaretInsideElement__(element: HTMLElement) {
         const CARET_RANGE: Range = document.createRange();
-        CARET_RANGE.selectNode(element);
+        CARET_RANGE.selectNodeContents(element);
 
         const WINDOW_SELECTION: Selection | null = window.getSelection();
 
