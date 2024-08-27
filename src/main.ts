@@ -61,24 +61,6 @@ class RichTextEditor {
             window.getSelection()?.removeAllRanges();
         });
 
-        this.TEXT_BOX.on('mouseenter', (_: JQuery.MouseEnterEvent) => {
-            if (this.__emptyCaretSelectionElementExists__()) {
-                const DELAY_BEFORE_DELETION: number = 5000; // 3 seconds
-
-                // give the user X seconds before deleting the empty caret selection element after they enter the text box
-                setTimeout(() => {
-                    // if the caret selection element is still empty after the delay then delete it
-                    if (this.__emptyCaretSelectionElementExists__()) {
-                        $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection as HTMLElement).remove();
-
-                        this.clearTextBoxLastSelectionData();
-                    }
-                }, DELAY_BEFORE_DELETION);
-            }
-
-            this.__updateTextBoxSelectionData__();
-        });
-
         this.TEXT_BOX.on('keyup', (event: JQuery.KeyUpEvent) => {
             // update current selection data
             this.__updateTextBoxSelectionData__();
