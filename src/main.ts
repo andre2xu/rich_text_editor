@@ -70,8 +70,6 @@ class RichTextEditor {
                 if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
                     const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
 
-                    let element_with_caret: HTMLElement = ELEMENT;
-
                     if (COLOR_HELPERS.isColorElement(ELEMENT)) {
                         // check if the caret selection color element is inside of an existing color element and if so take it out
                         const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(ELEMENT);
@@ -103,19 +101,9 @@ class RichTextEditor {
                             FORMAT_ELEMENT.replaceWith(FORMAT_ELEMENT.contents());
 
                             GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
-
-                            element_with_caret = PARENT;
                         }
                     }
-
-                    // caret moved because of newly added text so update the selection data to keep track of its new position
-                    this.__selectAndPlaceCaretInsideElement__(element_with_caret);
-
-                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = element_with_caret;
                 }
-
-                // make the existing selected element unmodifiable since it now has text
-                this.clearTextBoxLastSelectionData();
             }
         });
     };
