@@ -148,13 +148,6 @@ class RichTextEditor {
                         }
                     }
 
-                    // find the element with the text since it should have the caret (by default, 'element_with_caret' is assumed to have the text)
-                    $(element_with_caret).find('*').each((_: number, element: HTMLElement) => {
-                        if (element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE) {
-                            element_with_caret = element;
-                        }
-                    });
-
                     // caret moved because of newly added text so update the selection data to keep track of its new position
                     this.__selectAndPlaceCaretInsideElement__(element_with_caret);
 
