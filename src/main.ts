@@ -74,7 +74,7 @@ class RichTextEditor {
             // update current selection data
             this.__updateTextBoxSelectionData__();
 
-            if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
+            if (event.key.indexOf('Arrow') === -1 && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
                 // check if a caret selection was made
                 if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
                     const ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
@@ -111,6 +111,17 @@ class RichTextEditor {
 
                             GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
                         }
+                    }
+
+                    if (ELEMENT.innerText.indexOf('\u200b') !== -1) {
+                        // remove ZWSC
+                        ELEMENT.innerHTML = ELEMENT.innerHTML.replace('\u200b', '');
+
+                        // move caret at the end of the text
+                        this.__selectAndPlaceCaretInsideElement__(ELEMENT);
+
+                        // delete saved reference so that no modifications can be applied to the element that is no longer a caret selection element
+                        this.clearTextBoxLastSelectionData();
                     }
                 }
             }
