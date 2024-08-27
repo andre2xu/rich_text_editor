@@ -65,13 +65,6 @@ class RichTextEditor {
             // update current selection data
             this.__updateTextBoxSelectionData__();
 
-            // check if arrow keys are being used to move the caret and if so update the selection data to account for its new position
-            if (event.key.indexOf('Arrow') !== -1) {
-                if (event.key === 'ArrowRight' && this.TEXT_BOX_LAST_SELECTION_DATA?.lastSelectionType === 'Range' && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection instanceof HTMLElement) {
-                    this.__selectAndPlaceCaretInsideElement__(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
-                }
-            }
-
             if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
                 // check if a caret selection was made
                 if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
@@ -79,22 +72,7 @@ class RichTextEditor {
 
                     let element_with_caret: HTMLElement = ELEMENT;
 
-                    // check if the caret selection element has a zero-width space character
-                    if (ELEMENT.innerHTML.indexOf('\u200b') !== -1) {
-                        // remove zero-width space character
-                        ELEMENT.innerHTML = ELEMENT.innerHTML.replace('\u200b', '');
-
-                        // move the caret to the right of the newly-inserted character
-                        this.__selectAndPlaceCaretInsideElement__(ELEMENT);
-                    }
-
-                    if (ELEMENT.innerHTML === '\u200b') {
-                        // delete the caret selection element if it's still empty (i.e. a key was pressed but no character was put inside)
-                        $(ELEMENT).remove();
-
-                        this.clearTextBoxLastSelectionData();
-                    }
-                    else if (COLOR_HELPERS.isColorElement(ELEMENT)) {
+                    if (COLOR_HELPERS.isColorElement(ELEMENT)) {
                         // check if the caret selection color element is inside of an existing color element and if so take it out
                         const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(ELEMENT);
 
