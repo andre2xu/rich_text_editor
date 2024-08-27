@@ -62,6 +62,15 @@ class RichTextEditor {
         });
 
         this.TEXT_BOX.on('keyup', (event: JQuery.KeyUpEvent) => {
+            /*
+            OBJECTIVES:
+            - Delete zero-width space character from caret selection elements if the user populates them with text
+
+            - Ignore zero-width space character if the user moves caret with arrow keys
+
+            - Ensure caret selection element doesn't violate the rules for its type (see 'applyX' methods)
+            */
+
             // update current selection data
             this.__updateTextBoxSelectionData__();
 
