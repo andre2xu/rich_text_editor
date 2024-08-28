@@ -63,4 +63,10 @@ window.addEventListener('load', () => {
             color_picker_is_visible ? color_picker_is_visible = false : color_picker_is_visible = true;
         });
     }
+
+
+    // EVENT LISTENERS
+    RTE.addEventListener('format', (event) => {
+        
+    });
 });
