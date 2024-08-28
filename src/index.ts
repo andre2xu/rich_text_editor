@@ -100,6 +100,35 @@ window.addEventListener('load', () => {
                     break;
             }
         }
+
+        // change the color displayed by the color picker
+        if (COLOR_PICKER instanceof HTMLInputElement) {
+            let r: string = '00';
+            let g: string = '00';
+            let b: string = '00';
+
+            if (event.styles.textColor !== undefined) {
+                const RGB = event.styles.textColor;
+
+                r = RGB.r.toString(16);
+                g = RGB.g.toString(16);
+                b = RGB.b.toString(16);
+
+                if (r.length === 1) {
+                    r = `0${r}`;
+                }
+
+                if (g.length === 1) {
+                    g = `0${g}`;
+                }
+
+                if (b.length === 1) {
+                    b = `0${b}`;
+                }
+            }
+
+            COLOR_PICKER.value = `#${r}${g}${b}`;
+        }
     });
 
     RTE.addEventListener('format', (event) => {
