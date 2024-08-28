@@ -66,6 +66,10 @@ window.addEventListener('load', () => {
 
 
     // EVENT LISTENERS
+    RTE.addEventListener('mouseup', (event) => {
+        console.log(event.styles);
+    });
+
     RTE.addEventListener('format', (event) => {
         
     });
