@@ -15,6 +15,28 @@ interface TextBoxLastSelectionData {
     lastSelectionType: string | null
 };
 
+namespace RichTextEditorEvent {
+    export interface Format {
+        format: string
+    };
+
+    export interface Color {
+        color: {
+            r: number,
+            g: number,
+            b: number,
+            a: number,
+        }
+    };
+};
+
+type RichTextEditorEventListener = {
+    (type: 'format', listener: (event: RichTextEditorEvent.Format) => void): void,
+    (type: 'color', listener: (event: RichTextEditorEvent.Color) => void): void
+};
+
+
+
 class RichTextEditor {
     TEXT_BOX: JQuery<HTMLDivElement>;
     TEXT_BOX_SELECTION_DATA: TextBoxSelectionData = {
@@ -25,7 +47,7 @@ class RichTextEditor {
         lastSelection: null, // HTML of selection after it has been styled
         lastSelectionType: null // 'Caret' or 'Range'
     };
-    EVENT_LISTENERS: {[key: string]: Array<Function>} = {
+    EVENT_LISTENERS: {[key: string]: Array<RichTextEditorEventListener>} = {
         format: [],
         color: []
     };
@@ -402,7 +424,7 @@ class RichTextEditor {
 
 
     // PUBLIC
-    addEventListener(type: string, listener: () => void) {
+    addEventListener: RichTextEditorEventListener = (type: string, listener: any) => {
         if (this.EVENT_LISTENERS[type] === undefined) {
             throw RangeError("Invalid event type");
         }
