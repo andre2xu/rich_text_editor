@@ -25,6 +25,10 @@ class RichTextEditor {
         lastSelection: null, // HTML of selection after it has been styled
         lastSelectionType: null // 'Caret' or 'Range'
     };
+    EVENT_LISTENERS: {[key: string]: Array<Function>} = {
+        format: [],
+        color: []
+    };
 
     constructor(textBoxId: string) {
         const ELEMENT: HTMLElement | null = document.getElementById(textBoxId);
@@ -398,6 +402,14 @@ class RichTextEditor {
 
 
     // PUBLIC
+    addEventListener(type: string, listener: () => void) {
+        if (this.EVENT_LISTENERS[type] === undefined) {
+            throw RangeError("Invalid event type");
+        }
+
+        this.EVENT_LISTENERS[type].push(listener);
+    };
+
     clearTextBoxLastSelectionData() {
         this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = null;
         this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = null;
