@@ -103,7 +103,7 @@ class RichTextEditor {
                         });
 
                         // get color
-                        let text_color: TextColor | undefined = undefined;
+                        let text_color_in_selection: TextColor | undefined = undefined;
 
                         const COLOR_STRING: string = $(SELECTION.anchorNode).parents(COLOR_HELPERS.COLOR_ELEMENT_SELECTOR).first().css('color');
 
@@ -111,7 +111,7 @@ class RichTextEditor {
                             const RGB_STRINGS: Array<string> = COLOR_STRING.replace(/[a-zA-Z)(]/g, '').split(/, ?/);
 
                             if (RGB_STRINGS.length === 3) {
-                                text_color = {
+                                text_color_in_selection = {
                                     r: parseInt(RGB_STRINGS[0]),
                                     g: parseInt(RGB_STRINGS[1]),
                                     b: parseInt(RGB_STRINGS[2])
@@ -123,7 +123,7 @@ class RichTextEditor {
                         const MOUSEUP_EVENT_DATA: RichTextEditorEvent.MouseUp = {
                             styles: {
                                 formats: FORMATS_IN_SELECTION,
-                                textColor: text_color
+                                textColor: text_color_in_selection
                             }
                         };
 
