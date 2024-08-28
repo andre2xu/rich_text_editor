@@ -22,6 +22,13 @@ interface TextColor {
 };
 
 namespace RichTextEditorEvent {
+    export interface MouseUp {
+        styles: {
+            formats: Array<string>,
+            textColor: TextColor
+        }
+    };
+
     export interface Format {
         format: string
     };
@@ -32,6 +39,7 @@ namespace RichTextEditorEvent {
 };
 
 type RichTextEditorEventListener = {
+    (type: 'mouseup', listener: (event: RichTextEditorEvent.MouseUp) => void): void,
     (type: 'format', listener: (event: RichTextEditorEvent.Format) => void): void,
     (type: 'color', listener: (event: RichTextEditorEvent.Color) => void): void
 };
@@ -49,6 +57,7 @@ class RichTextEditor {
         lastSelectionType: null // 'Caret' or 'Range'
     };
     EVENT_LISTENERS: {[key: string]: Array<RichTextEditorEventListener>} = {
+        mouseup: [],
         format: [],
         color: []
     };
