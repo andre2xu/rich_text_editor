@@ -15,18 +15,19 @@ interface TextBoxLastSelectionData {
     lastSelectionType: string | null
 };
 
+interface TextColor {
+    r: number,
+    g: number,
+    b: number
+};
+
 namespace RichTextEditorEvent {
     export interface Format {
         format: string
     };
 
     export interface Color {
-        color: {
-            r: number,
-            g: number,
-            b: number,
-            a: number,
-        }
+        textColor: TextColor
     };
 };
 
