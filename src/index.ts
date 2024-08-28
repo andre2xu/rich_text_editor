@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 import RichTextEditor from './main';
 
 window.addEventListener('load', () => {
@@ -67,7 +69,37 @@ window.addEventListener('load', () => {
 
     // EVENT LISTENERS
     RTE.addEventListener('mouseup', (event) => {
-        console.log(event.styles);
+        const FORMATS_IN_SELECTION: Array<string> = event.styles.formats;
+        const NUM_OF_FORMATS: number = FORMATS_IN_SELECTION.length;
+
+        const BOLD_BUTTON: JQuery<HTMLElement> = $('#bold');
+        const ITALIC_BUTTON: JQuery<HTMLElement> = $('#italic');
+        const UNDERLINE_BUTTON: JQuery<HTMLElement> = $('#underline');
+        const STRIKETHROUGH_BUTTON: JQuery<HTMLElement> = $('#strikethrough');
+
+        // deselect all format buttons
+        BOLD_BUTTON.removeClass('selected');
+        ITALIC_BUTTON.removeClass('selected');
+        UNDERLINE_BUTTON.removeClass('selected');
+        STRIKETHROUGH_BUTTON.removeClass('selected');
+
+        // select only the buttons of the formats present in the current text box selection
+        for (let i=0; i < NUM_OF_FORMATS; i++) {
+            switch (FORMATS_IN_SELECTION[i]) {
+                case 'b':
+                    BOLD_BUTTON.addClass('selected');
+                    break;
+                case 'i':
+                    ITALIC_BUTTON.addClass('selected');
+                    break;
+                case 'u':
+                    UNDERLINE_BUTTON.addClass('selected');
+                    break;
+                case 's':
+                    STRIKETHROUGH_BUTTON.addClass('selected');
+                    break;
+            }
+        }
     });
 
     RTE.addEventListener('format', (event) => {
