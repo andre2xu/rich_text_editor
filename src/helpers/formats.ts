@@ -108,6 +108,7 @@ function separateInnerColorElementsFromParentFormatElement(formatElement: HTMLEl
 };
 
 export {
+    FORMAT_ELEMENT_SELECTOR,
     isFormatElement,
     getDuplicateDescendants,
     getClosestDuplicateAncestor,
