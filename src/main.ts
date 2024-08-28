@@ -25,7 +25,7 @@ namespace RichTextEditorEvent {
     export interface MouseUp {
         styles: {
             formats: Array<string>,
-            textColor: TextColor
+            textColor: TextColor | undefined
         }
     };
 
@@ -56,7 +56,7 @@ class RichTextEditor {
         lastSelection: null, // HTML of selection after it has been styled
         lastSelectionType: null // 'Caret' or 'Range'
     };
-    EVENT_LISTENERS: {[key: string]: Array<RichTextEditorEventListener>} = {
+    EVENT_LISTENERS: {[key: string]: Array<Function>} = {
         mouseup: [],
         format: [],
         color: []
@@ -89,6 +89,53 @@ class RichTextEditor {
                 this.__updateTextBoxSelectionData__();
 
                 this.clearTextBoxLastSelectionData();
+
+                // find the styles present in the selection
+                const SELECTION: Selection | null = this.TEXT_BOX_SELECTION_DATA.selection;
+
+                if (SELECTION !== null && SELECTION.anchorNode !== null && SELECTION.focusNode !== null) {
+                    if (SELECTION.anchorNode === SELECTION.focusNode) {
+                        // get formats
+                        const FORMATS_IN_SELECTION: Array<string> = [];
+
+                        $(SELECTION.anchorNode).parents(FORMAT_HELPERS.FORMAT_ELEMENT_SELECTOR).each((_, element: HTMLElement) => {
+                            FORMATS_IN_SELECTION.push(element.tagName.toLowerCase());
+                        });
+
+                        // get color
+                        let text_color: TextColor | undefined = undefined;
+
+                        const COLOR_STRING: string = $(SELECTION.anchorNode).parents(COLOR_HELPERS.COLOR_ELEMENT_SELECTOR).first().css('color');
+
+                        if (COLOR_STRING !== undefined) {
+                            const RGB_STRINGS: Array<string> = COLOR_STRING.replace(/[a-zA-Z)(]/g, '').split(/, ?/);
+
+                            if (RGB_STRINGS.length === 3) {
+                                text_color = {
+                                    r: parseInt(RGB_STRINGS[0]),
+                                    g: parseInt(RGB_STRINGS[1]),
+                                    b: parseInt(RGB_STRINGS[2])
+                                };
+                            }
+                        }
+
+                        // create mouseup event object
+                        const MOUSEUP_EVENT_DATA: RichTextEditorEvent.MouseUp = {
+                            styles: {
+                                formats: FORMATS_IN_SELECTION,
+                                textColor: text_color
+                            }
+                        };
+
+                        // invoke mouseup listener(s)
+                        const MOUSEUP_LISTENERS: Array<Function> = this.EVENT_LISTENERS.mouseup;
+                        const NUM_OF_MOUSEUP_LISTENERS: number = MOUSEUP_LISTENERS.length;
+
+                        for (let i=0; i < NUM_OF_MOUSEUP_LISTENERS; i++) {
+                            MOUSEUP_LISTENERS[i](MOUSEUP_EVENT_DATA);
+                        }
+                    }
+                }
             }
         });
 
