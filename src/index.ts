@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import RichTextEditor from './main';
+import RichTextEditor, {RichTextEditorStyles, TextColor} from './main';
 
 window.addEventListener('load', () => {
     const RTE: RichTextEditor = new RichTextEditor('text-box');
@@ -67,9 +67,9 @@ window.addEventListener('load', () => {
     }
 
 
-    // EVENT LISTENERS
-    RTE.addEventListener('mouseup', (event) => {
-        const FORMATS_IN_SELECTION: Array<string> = event.styles.formats;
+    // HELPERS
+    function updateRTEToolWidgets(styles: RichTextEditorStyles) {
+        const FORMATS_IN_SELECTION: Array<string> = styles.formats;
         const NUM_OF_FORMATS: number = FORMATS_IN_SELECTION.length;
 
         const BOLD_BUTTON: JQuery<HTMLElement> = $('#bold');
@@ -107,8 +107,8 @@ window.addEventListener('load', () => {
             let g: string = '00';
             let b: string = '00';
 
-            if (event.styles.textColor !== undefined) {
-                const RGB = event.styles.textColor;
+            if (styles.textColor !== undefined) {
+                const RGB: TextColor = styles.textColor;
 
                 r = RGB.r.toString(16);
                 g = RGB.g.toString(16);
@@ -129,6 +129,12 @@ window.addEventListener('load', () => {
 
             COLOR_PICKER.value = `#${r}${g}${b}`;
         }
+    };
+
+
+    // EVENT LISTENERS
+    RTE.addEventListener('mouseup', (event) => {
+        updateRTEToolWidgets(event.styles);
     });
 
     RTE.addEventListener('format', (event) => {
