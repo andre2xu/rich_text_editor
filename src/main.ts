@@ -31,6 +31,11 @@ namespace RichTextEditorEvent {
         styles: RichTextEditorStyles
     };
 
+    export interface KeyUp {
+        metaData: JQuery.KeyUpEvent,
+        styles: RichTextEditorStyles
+    };
+
     export interface Format {
         format: string
     };
@@ -42,6 +47,7 @@ namespace RichTextEditorEvent {
 
 type RichTextEditorEventListener = {
     (type: 'mouseup', listener: (event: RichTextEditorEvent.MouseUp) => void): void,
+    (type: 'keyup', listener: (event: RichTextEditorEvent.KeyUp) => void): void,
     (type: 'format', listener: (event: RichTextEditorEvent.Format) => void): void,
     (type: 'color', listener: (event: RichTextEditorEvent.Color) => void): void
 };
@@ -60,6 +66,7 @@ class RichTextEditor {
     };
     EVENT_LISTENERS: {[key: string]: Array<Function>} = {
         mouseup: [],
+        keyup: [],
         format: [],
         color: []
     };
@@ -184,6 +191,20 @@ class RichTextEditor {
                         this.clearTextBoxLastSelectionData();
                     }
                 }
+            }
+
+            // create keyup event object
+            const KEYUP_EVENT_DATA: RichTextEditorEvent.KeyUp = {
+                metaData: event,
+                styles: this.__getStylesInSelection__()
+            };
+
+            // invoke mouseup listener(s)
+            const KEYUP_LISTENERS: Array<Function> = this.EVENT_LISTENERS.keyup;
+            const NUM_OF_MOUSEUP_LISTENERS: number = KEYUP_LISTENERS.length;
+
+            for (let i=0; i < NUM_OF_MOUSEUP_LISTENERS; i++) {
+                KEYUP_LISTENERS[i](KEYUP_EVENT_DATA);
             }
         });
     };
