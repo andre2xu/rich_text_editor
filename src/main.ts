@@ -26,7 +26,7 @@ export interface RichTextEditorStyles {
     textColor: TextColor | undefined
 };
 
-namespace RichTextEditorEvent {
+export namespace RichTextEditorEvent {
     export interface MouseUp {
         metaData: JQuery.MouseUpEvent,
         styles: RichTextEditorStyles

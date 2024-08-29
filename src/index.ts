@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import RichTextEditor, {RichTextEditorStyles, TextColor} from './main';
+import RichTextEditor, {RichTextEditorStyles, TextColor, RichTextEditorEvent} from './main';
 
 window.addEventListener('load', () => {
     const RTE: RichTextEditor = new RichTextEditor('text-box');
@@ -133,15 +133,15 @@ window.addEventListener('load', () => {
 
 
     // EVENT LISTENERS
-    RTE.addEventListener('mouseup', (event) => {
+    RTE.addEventListener('mouseup', (event: RichTextEditorEvent.MouseUp) => {
         updateRTEToolWidgets(event.styles);
     });
 
-    RTE.addEventListener('keyup', (event) => {
+    RTE.addEventListener('keyup', (event: RichTextEditorEvent.KeyUp) => {
         updateRTEToolWidgets(event.styles);
     });
 
-    RTE.addEventListener('format', (event) => {
+    RTE.addEventListener('format', (event: RichTextEditorEvent.Format) => {
         
     });
 });
