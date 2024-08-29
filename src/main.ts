@@ -515,6 +515,20 @@ class RichTextEditor {
         if ($.inArray(format, ['b', 'i', 'u', 's']) === -1) {
             throw RangeError(`Format must be one of the following: ${FORMAT_HELPERS.FORMAT_ELEMENT_SELECTOR}`);
         }
+
+        if (this.__selectionInTextBoxExists__()) {
+            const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
+
+            if (SELECTION_TYPE === 'Caret') {
+
+            }
+            else if (SELECTION_TYPE === 'Range') {
+
+            }
+            else {
+                throw TypeError("Invalid selection type");
+            }
+        }
     };
 
     __toggleFormat__(format: string) {
