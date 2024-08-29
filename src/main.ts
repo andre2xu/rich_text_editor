@@ -65,6 +65,10 @@ class RichTextEditor {
         lastSelection: null, // HTML of selection after it has been styled
         lastSelectionType: null // 'Caret' or 'Range'
     };
+    TEXT_BOX_SELECTION_STYLES: RichTextEditorStyles = {
+        formats: [],
+        textColor: undefined
+    };
     EVENT_LISTENERS: {[key: string]: Array<Function>} = {
         mouseup: [],
         keyup: [],
@@ -267,6 +271,9 @@ class RichTextEditor {
                 }
             }
         }
+
+        // update the rich text editor's copy of the selection styles object
+        this.TEXT_BOX_SELECTION_STYLES = STYLES;
 
         return STYLES;
     };
