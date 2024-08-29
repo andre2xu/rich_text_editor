@@ -137,6 +137,10 @@ window.addEventListener('load', () => {
         updateRTEToolWidgets(event.styles);
     });
 
+    RTE.addEventListener('keyup', (event) => {
+        updateRTEToolWidgets(event.styles);
+    });
+
     RTE.addEventListener('format', (event) => {
         
     });
