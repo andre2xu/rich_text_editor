@@ -15,13 +15,13 @@ interface TextBoxLastSelectionData {
     lastSelectionType: string | null
 };
 
-interface TextColor {
+export interface TextColor {
     r: number,
     g: number,
     b: number
 };
 
-interface RichTextEditorStyles {
+export interface RichTextEditorStyles {
     formats: Array<string>,
     textColor: TextColor | undefined
 };
