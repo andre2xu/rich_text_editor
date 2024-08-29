@@ -511,6 +511,34 @@ class RichTextEditor {
         }
     };
 
+    __removeFormat__(format: string) {
+        if ($.inArray(format, ['b', 'i', 'u', 's']) === -1) {
+            throw RangeError(`Format must be one of the following: ${FORMAT_HELPERS.FORMAT_ELEMENT_SELECTOR}`);
+        }
+    };
+
+    __toggleFormat__(format: string) {
+        if ($.inArray(format, this.TEXT_BOX_SELECTION_STYLES.formats) !== -1) {
+            this.__removeFormat__(format);
+        }
+        else {
+            switch (format) {
+                case 'b':
+                    this.applyBold();
+                    break;
+                case 'i':
+                    this.applyItalic();
+                    break;
+                case 'u':
+                    this.applyUnderline();
+                    break;
+                case 's':
+                    this.applyStrikethrough();
+                    break;
+            }
+        }
+    };
+
 
 
     // PUBLIC
@@ -704,6 +732,22 @@ class RichTextEditor {
 
     applyStrikethrough() {
         this.__applyFormat__(document.createElement('s'));
+    };
+
+    toggleBold() {
+        this.__toggleFormat__('b');
+    };
+
+    toggleItalic() {
+        this.__toggleFormat__('i');
+    };
+
+    toggleUnderline() {
+        this.__toggleFormat__('u');
+    };
+
+    toggleStrikethrough() {
+        this.__toggleFormat__('s');
     };
 };
 
