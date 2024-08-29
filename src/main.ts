@@ -21,12 +21,14 @@ interface TextColor {
     b: number
 };
 
+interface RichTextEditorStyles {
+    formats: Array<string>,
+    textColor: TextColor | undefined
+};
+
 namespace RichTextEditorEvent {
     export interface MouseUp {
-        styles: {
-            formats: Array<string>,
-            textColor: TextColor | undefined
-        }
+        styles: RichTextEditorStyles
     };
 
     export interface Format {
@@ -212,10 +214,7 @@ class RichTextEditor {
     };
 
     __getStylesInSelection__() {
-        const STYLES: {
-            formats: Array<string>,
-            textColor: TextColor | undefined
-        } = {
+        const STYLES: RichTextEditorStyles = {
             formats: [],
             textColor: undefined
         };
