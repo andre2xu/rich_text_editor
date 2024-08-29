@@ -28,6 +28,7 @@ export interface RichTextEditorStyles {
 
 namespace RichTextEditorEvent {
     export interface MouseUp {
+        metaData: JQuery.MouseUpEvent,
         styles: RichTextEditorStyles
     };
 
@@ -101,6 +102,7 @@ class RichTextEditor {
 
                 // create mouseup event object
                 const MOUSEUP_EVENT_DATA: RichTextEditorEvent.MouseUp = {
+                    metaData: event,
                     styles: this.__getStylesInSelection__()
                 };
 
