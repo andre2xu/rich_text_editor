@@ -133,70 +133,87 @@ class RichTextEditor {
             - Ignore zero-width space character if the user moves caret with arrow keys
 
             - Ensure caret selection element doesn't violate the rules for its type (see 'applyX' methods)
+
+            - Delete temporary containers
             */
 
             // update current selection data
             this.__updateTextBoxSelectionData__();
 
-            if (event.key.indexOf('Arrow') === -1 && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
-                // check if a caret selection was made
-                if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
-                    let element: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
+            if (event.key.indexOf('Arrow') === -1) {
+                if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
+                    // check if a caret selection was made
+                    if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Caret') {
+                        let element: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
 
-                    if (COLOR_HELPERS.isColorElement(element)) {
-                        // check if the caret selection color element is inside of an existing color element and if so take it out
-                        const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(element);
+                        if (COLOR_HELPERS.isColorElement(element)) {
+                            // check if the caret selection color element is inside of an existing color element and if so take it out
+                            const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(element);
 
-                        if (PARENT_COLOR_ELEMENT !== undefined) {
-                            COLOR_HELPERS.separateColorElementFromParentColorElement(element, PARENT_COLOR_ELEMENT);
+                            if (PARENT_COLOR_ELEMENT !== undefined) {
+                                COLOR_HELPERS.separateColorElementFromParentColorElement(element, PARENT_COLOR_ELEMENT);
 
+                                this.__selectAndPlaceCaretInsideElement__(element);
+                            }
+
+                            // check if the caret selection color element is inside of <u> or <s> elements and if so take it out of the furthest ancestor
+                            const FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getFurthestUnderlineOrStrikethroughAncestorElement(element);
+
+                            if (FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT !== undefined) {
+                                COLOR_HELPERS.separateColorElementFromUnderlineOrStrikethroughAncestorElement(element, FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT);
+
+                                this.__selectAndPlaceCaretInsideElement__(element);
+                            }
+
+                            // if the caret selection color element has descendants then the caret will be in the innermost descendant (where the user's new text will be) so mark it as the new caret element
+                            const DESCENDANTS: JQuery<HTMLElement> = $(element).find('*');
+
+                            if (DESCENDANTS.length > 0) {
+                                const INNERMOST_DESCENDANT: HTMLElement = DESCENDANTS.get(-1) as HTMLElement;
+
+                                element = INNERMOST_DESCENDANT;
+                            }
+                        }
+                        else if (FORMAT_HELPERS.isFormatElement(element)) {
+                            const FORMAT_ELEMENT: JQuery<HTMLElement> = $(element);
+
+                            // check if the new format element is inside of an ancestor format element with the same tag and if so undo the formatting
+                            const CLOSEST_DUPLICATE_ANCESTOR: HTMLElement | undefined = FORMAT_HELPERS.getClosestDuplicateAncestor(element);
+
+                            if (CLOSEST_DUPLICATE_ANCESTOR !== undefined) {
+                                const PARENT: HTMLElement = element.parentElement as HTMLElement;
+
+                                FORMAT_ELEMENT.replaceWith(FORMAT_ELEMENT.contents());
+
+                                GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
+                            }
+                        }
+
+                        if (element.innerText.indexOf('\u200b') !== -1) {
+                            // remove ZWSC
+                            element.innerHTML = element.innerHTML.replace('\u200b', '');
+
+                            // move caret at the end of the text
                             this.__selectAndPlaceCaretInsideElement__(element);
                         }
-
-                        // check if the caret selection color element is inside of <u> or <s> elements and if so take it out of the furthest ancestor
-                        const FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getFurthestUnderlineOrStrikethroughAncestorElement(element);
-
-                        if (FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT !== undefined) {
-                            COLOR_HELPERS.separateColorElementFromUnderlineOrStrikethroughAncestorElement(element, FURTHEST_UNDERLINE_OR_STRIKETHROUGH_ELEMENT);
-
-                            this.__selectAndPlaceCaretInsideElement__(element);
-                        }
-
-                        // if the caret selection color element has descendants then the caret will be in the innermost descendant (where the user's new text will be) so mark it as the new caret element
-                        const DESCENDANTS: JQuery<HTMLElement> = $(element).find('*');
-
-                        if (DESCENDANTS.length > 0) {
-                            const INNERMOST_DESCENDANT: HTMLElement = DESCENDANTS.get(-1) as HTMLElement;
-
-                            element = INNERMOST_DESCENDANT;
-                        }
-                    }
-                    else if (FORMAT_HELPERS.isFormatElement(element)) {
-                        const FORMAT_ELEMENT: JQuery<HTMLElement> = $(element);
-
-                        // check if the new format element is inside of an ancestor format element with the same tag and if so undo the formatting
-                        const CLOSEST_DUPLICATE_ANCESTOR: HTMLElement | undefined = FORMAT_HELPERS.getClosestDuplicateAncestor(element);
-
-                        if (CLOSEST_DUPLICATE_ANCESTOR !== undefined) {
-                            const PARENT: HTMLElement = element.parentElement as HTMLElement;
-
-                            FORMAT_ELEMENT.replaceWith(FORMAT_ELEMENT.contents());
-
-                            GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
-                        }
-                    }
-
-                    if (element.innerText.indexOf('\u200b') !== -1) {
-                        // remove ZWSC
-                        element.innerHTML = element.innerHTML.replace('\u200b', '');
-
-                        // move caret at the end of the text
-                        this.__selectAndPlaceCaretInsideElement__(element);
-
-                        // delete saved reference so that no modifications can be applied to the element that is no longer a caret selection element
-                        this.clearTextBoxLastSelectionData();
                     }
                 }
+
+                this.TEXT_BOX.find('.temporary-rte-container').each((_, container: HTMLElement) => {
+                    const CONTAINER: JQuery<HTMLElement> = $(container);
+
+                    // delete zero-width space character
+                    container.innerHTML = container.innerHTML.replace('\u200b', '');
+
+                    if (container.innerHTML.length > 0) {
+                        CONTAINER.contents().insertBefore(container);
+                    }
+
+                    CONTAINER.remove();
+                });
+
+                // delete saved reference so that no modifications can be applied to the element that is no longer a caret selection element
+                this.clearTextBoxLastSelectionData();
             }
 
             // create keyup event object
