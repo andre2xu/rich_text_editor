@@ -195,10 +195,14 @@ class RichTextEditor {
 
                             // move caret at the end of the text
                             this.__selectAndPlaceCaretInsideElement__(element);
+
+                            // delete saved reference so that no modifications can be applied to the element that is no longer a caret selection element
+                            this.clearTextBoxLastSelectionData();
                         }
                     }
                 }
 
+                // delete temporary containers (if any exist)
                 this.TEXT_BOX.find('.temporary-rte-container').each((_, container: HTMLElement) => {
                     const CONTAINER: JQuery<HTMLElement> = $(container);
 
@@ -211,9 +215,6 @@ class RichTextEditor {
 
                     CONTAINER.remove();
                 });
-
-                // delete saved reference so that no modifications can be applied to the element that is no longer a caret selection element
-                this.clearTextBoxLastSelectionData();
             }
 
             // create keyup event object
