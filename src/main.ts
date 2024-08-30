@@ -520,6 +520,7 @@ class RichTextEditor {
             const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
 
             const TEMPORARY_CONTAINER: JQuery<HTMLElement> = $(document.createElement('span'));
+            TEMPORARY_CONTAINER.addClass('temporary-rte-container');
 
             SELECTION_RANGE.surroundContents(TEMPORARY_CONTAINER[0]);
 
@@ -527,7 +528,9 @@ class RichTextEditor {
             let target_format_element: HTMLElement | undefined = undefined;
 
             TEMPORARY_CONTAINER.parents().each((_, parent: HTMLElement) => {
-                if (parent.tagName.toLowerCase() === format) {
+                const TAG: string = parent.tagName.toLowerCase();
+
+                if (TAG === format) {
                     // stop when the target format has been reached
                     target_format_element = parent;
 
@@ -535,14 +538,17 @@ class RichTextEditor {
                 }
 
                 // recreate the selection's styles but exclude the target format
-                if (styled_container === undefined) {
-                    styled_container = document.createElement(parent.tagName);
-                }
-                else {
-                    const NEW_CONTAINER = document.createElement(parent.tagName);
-                    NEW_CONTAINER.appendChild(styled_container);
+                const STYLE_ELEMENT: HTMLElement = document.createElement(TAG);
 
-                    styled_container = NEW_CONTAINER;
+                if (FORMAT_HELPERS.isFormatElement(STYLE_ELEMENT) || COLOR_HELPERS.isColorElement(STYLE_ELEMENT)) {
+                    if (styled_container === undefined) {
+                        styled_container = STYLE_ELEMENT;
+                    }
+                    else {
+                        STYLE_ELEMENT.appendChild(styled_container);
+
+                        styled_container = STYLE_ELEMENT;
+                    }
                 }
             });
 
@@ -563,19 +569,17 @@ class RichTextEditor {
                     if (INNERMOST_ELEMENT[0] !== undefined) {
                         INNERMOST_ELEMENT.text('\u200b');
 
+                        // make caret re-appear inside the temporary container's innermost element
                         this.__selectAndPlaceCaretInsideElement__(INNERMOST_ELEMENT[0]);
                     }
                     else {
-                        // no inner style elements so assign an id to the temporary container. This makes it easier for the 'keyup' event handler to find it and remove the zero-width space character as well as the container itself
-
                         TEMPORARY_CONTAINER.text('\u200b');
-                        TEMPORARY_CONTAINER.attr('id', 'temporary-caret-container');
 
                         // make caret re-appear inside the temporary container
                         this.__selectAndPlaceCaretInsideElement__(TEMPORARY_CONTAINER[0]);
-
-                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
                     }
+
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
                 }
                 else if (SELECTION_TYPE === 'Range') {
 
