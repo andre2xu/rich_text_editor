@@ -103,8 +103,33 @@ function deleteAllEmptyDescendants(parent: HTMLElement) {
     RANGE.insertNode(FRAGMENT);
 };
 
+function separateElementFromSpecificAncestor(element: HTMLElement, ancestor: HTMLElement) {
+    if ((ancestor.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_CONTAINED_BY) === 0) {
+        throw ReferenceError("The given element is not a descendant of the ancestor element");
+    }
+
+    const LEFT_SLICE: Range = document.createRange();
+    LEFT_SLICE.setStartBefore(ancestor);
+    LEFT_SLICE.setEndBefore(element);
+
+    const MIDDLE_SLICE: Range = document.createRange();
+    MIDDLE_SLICE.selectNode(element);
+
+    const RIGHT_SLICE: Range = document.createRange();
+    RIGHT_SLICE.setStartAfter(element);
+    RIGHT_SLICE.setEndAfter(ancestor);
+
+    const NEW_ANCESTOR: DocumentFragment = document.createDocumentFragment();
+    NEW_ANCESTOR.appendChild(LEFT_SLICE.extractContents());
+    NEW_ANCESTOR.appendChild(MIDDLE_SLICE.extractContents());
+    NEW_ANCESTOR.appendChild(RIGHT_SLICE.extractContents());
+
+    $(ancestor).replaceWith(NEW_ANCESTOR);
+};
+
 export {
     moveContentsTo,
     mergeSimilarAdjacentChildNodes,
-    deleteAllEmptyDescendants
+    deleteAllEmptyDescendants,
+    separateElementFromSpecificAncestor
 };
