@@ -517,16 +517,72 @@ class RichTextEditor {
         }
 
         if (this.__selectionInTextBoxExists__()) {
-            const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
+            const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
 
-            if (SELECTION_TYPE === 'Caret') {
+            const TEMPORARY_CONTAINER: JQuery<HTMLElement> = $(document.createElement('span'));
 
+            SELECTION_RANGE.surroundContents(TEMPORARY_CONTAINER[0]);
+
+            let styled_container: HTMLElement | undefined = undefined;
+            let target_format_element: HTMLElement | undefined = undefined;
+
+            TEMPORARY_CONTAINER.parents().each((_, parent: HTMLElement) => {
+                if (parent.tagName.toLowerCase() === format) {
+                    // stop when the target format has been reached
+                    target_format_element = parent;
+
+                    return false;
+                }
+
+                // recreate the selection's styles but exclude the target format
+                if (styled_container === undefined) {
+                    styled_container = document.createElement(parent.tagName);
+                }
+                else {
+                    const NEW_CONTAINER = document.createElement(parent.tagName);
+                    NEW_CONTAINER.appendChild(styled_container);
+
+                    styled_container = NEW_CONTAINER;
+                }
+            });
+
+            // put the modified version of the selection's styled container inside the temporary container
+            if (styled_container !== undefined) {
+                TEMPORARY_CONTAINER.append(styled_container);
             }
-            else if (SELECTION_TYPE === 'Range') {
 
-            }
-            else {
-                throw TypeError("Invalid selection type");
+            if (target_format_element !== undefined) {
+                // separate temporary container from target format element
+                GENERAL_HELPERS.separateElementFromSpecificAncestor(TEMPORARY_CONTAINER[0], target_format_element);
+
+                const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
+
+                if (SELECTION_TYPE === 'Caret') {
+                    const INNERMOST_ELEMENT: JQuery<HTMLElement> = TEMPORARY_CONTAINER.find('*').last();
+
+                    if (INNERMOST_ELEMENT[0] !== undefined) {
+                        INNERMOST_ELEMENT.text('\u200b');
+
+                        this.__selectAndPlaceCaretInsideElement__(INNERMOST_ELEMENT[0]);
+                    }
+                    else {
+                        // no inner style elements so assign an id to the temporary container. This makes it easier for the 'keyup' event handler to find it and remove the zero-width space character as well as the container itself
+
+                        TEMPORARY_CONTAINER.text('\u200b');
+                        TEMPORARY_CONTAINER.attr('id', 'temporary-caret-container');
+
+                        // make caret re-appear inside the temporary container
+                        this.__selectAndPlaceCaretInsideElement__(TEMPORARY_CONTAINER[0]);
+
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+                    }
+                }
+                else if (SELECTION_TYPE === 'Range') {
+
+                }
+                else {
+                    throw TypeError("Invalid selection type");
+                }
             }
         }
     };
