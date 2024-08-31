@@ -211,7 +211,25 @@ class RichTextEditor {
                     container.innerHTML = container.innerHTML.replace('\u200b', '');
 
                     if (container.innerHTML.length > 0) {
-                        CONTAINER.contents().insertBefore(container);
+                        // the non-empty container is the one with the user's text so move its contents out
+                        const CONTENTS: JQuery<HTMLElement | Text | Comment | Document> = CONTAINER.contents();
+                        const LAST_NODE: JQuery<HTMLElement | Text | Comment | Document> = CONTENTS.last();
+
+                        CONTENTS.insertBefore(container);
+
+                        // place the caret at the end of the last node
+                        const NEW_SELECTION_RANGE: Range = document.createRange();
+                        NEW_SELECTION_RANGE.selectNode(LAST_NODE[0]);
+                        NEW_SELECTION_RANGE.collapse();
+
+                        const SELECTION: Selection | null = window.getSelection();
+
+                        if (SELECTION !== null) {
+                            SELECTION.removeAllRanges();
+                            SELECTION.addRange(NEW_SELECTION_RANGE);
+
+                            this.__updateTextBoxSelectionData__();
+                        }
                     }
 
                     CONTAINER.remove();
