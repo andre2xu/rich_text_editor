@@ -121,7 +121,7 @@ function separateElementFromSpecificAncestor(element: HTMLElement, ancestor: HTM
 
     const NEW_ANCESTOR: DocumentFragment = document.createDocumentFragment();
     NEW_ANCESTOR.appendChild(LEFT_SLICE.cloneContents());
-    NEW_ANCESTOR.appendChild(MIDDLE_SLICE.cloneContents());
+    NEW_ANCESTOR.appendChild(MIDDLE_SLICE.extractContents());
     NEW_ANCESTOR.appendChild(RIGHT_SLICE.cloneContents());
 
     $(ancestor).replaceWith(NEW_ANCESTOR);
