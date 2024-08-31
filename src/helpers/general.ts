@@ -120,9 +120,9 @@ function separateElementFromSpecificAncestor(element: HTMLElement, ancestor: HTM
     RIGHT_SLICE.setEndAfter(ancestor);
 
     const NEW_ANCESTOR: DocumentFragment = document.createDocumentFragment();
-    NEW_ANCESTOR.appendChild(LEFT_SLICE.extractContents());
-    NEW_ANCESTOR.appendChild(MIDDLE_SLICE.extractContents());
-    NEW_ANCESTOR.appendChild(RIGHT_SLICE.extractContents());
+    NEW_ANCESTOR.appendChild(LEFT_SLICE.cloneContents());
+    NEW_ANCESTOR.appendChild(MIDDLE_SLICE.cloneContents());
+    NEW_ANCESTOR.appendChild(RIGHT_SLICE.cloneContents());
 
     $(ancestor).replaceWith(NEW_ANCESTOR);
 };
