@@ -600,7 +600,28 @@ class RichTextEditor {
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
                 }
                 else if (SELECTION_TYPE === 'Range') {
+                    // move the temporary container's contents outside of the element
+                    const CONTENTS: JQuery<HTMLElement | Document | Text | Comment> = TEMPORARY_CONTAINER.contents();
+                    const LAST_NODE: JQuery<HTMLElement | Document | Text | Comment> = CONTENTS.last();
 
+                    CONTENTS.insertBefore(TEMPORARY_CONTAINER[0]);
+
+                    // place the caret at the end of the temporary container's last node
+                    const NEW_SELECTION_RANGE: Range = document.createRange();
+                    NEW_SELECTION_RANGE.selectNode(LAST_NODE[0]);
+                    NEW_SELECTION_RANGE.collapse();
+
+                    const SELECTION: Selection | null = window.getSelection();
+
+                    if (SELECTION !== null) {
+                        SELECTION.removeAllRanges();
+                        SELECTION.addRange(NEW_SELECTION_RANGE);
+
+                        this.__updateTextBoxSelectionData__();
+
+                        // get rid of the temporary container
+                        TEMPORARY_CONTAINER.remove();
+                    }
                 }
                 else {
                     throw TypeError("Invalid selection type");
