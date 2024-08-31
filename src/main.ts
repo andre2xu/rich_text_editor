@@ -75,6 +75,7 @@ class RichTextEditor {
         format: [],
         color: []
     };
+    TEMPORARY_CONTAINER_CLASS: string = 'temporary-rte-container';
 
     constructor(textBoxId: string) {
         const ELEMENT: HTMLElement | null = document.getElementById(textBoxId);
@@ -203,7 +204,7 @@ class RichTextEditor {
                 }
 
                 // delete temporary containers (if any exist)
-                this.TEXT_BOX.find('.temporary-rte-container').each((_, container: HTMLElement) => {
+                this.TEXT_BOX.find(`.${this.TEMPORARY_CONTAINER_CLASS}`).each((_, container: HTMLElement) => {
                     const CONTAINER: JQuery<HTMLElement> = $(container);
 
                     // delete zero-width space character
@@ -536,9 +537,10 @@ class RichTextEditor {
 
         if (this.__selectionInTextBoxExists__()) {
             const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
+            const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
 
             const TEMPORARY_CONTAINER: JQuery<HTMLElement> = $(document.createElement('span'));
-            TEMPORARY_CONTAINER.addClass('temporary-rte-container');
+            TEMPORARY_CONTAINER.addClass(this.TEMPORARY_CONTAINER_CLASS);
 
             SELECTION_RANGE.surroundContents(TEMPORARY_CONTAINER[0]);
 
@@ -578,8 +580,6 @@ class RichTextEditor {
             if (target_format_element !== undefined) {
                 // separate temporary container from target format element
                 GENERAL_HELPERS.separateElementFromSpecificAncestor(TEMPORARY_CONTAINER[0], target_format_element);
-
-                const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
 
                 if (SELECTION_TYPE === 'Caret') {
                     const INNERMOST_ELEMENT: JQuery<HTMLElement> = TEMPORARY_CONTAINER.find('*').last();
