@@ -602,14 +602,15 @@ class RichTextEditor {
                 else if (SELECTION_TYPE === 'Range') {
                     // move the temporary container's contents outside of the element
                     const CONTENTS: JQuery<HTMLElement | Document | Text | Comment> = TEMPORARY_CONTAINER.contents();
+                    const FIRST_NODE: JQuery<HTMLElement | Document | Text | Comment> = CONTENTS.first();
                     const LAST_NODE: JQuery<HTMLElement | Document | Text | Comment> = CONTENTS.last();
 
                     CONTENTS.insertBefore(TEMPORARY_CONTAINER[0]);
 
-                    // place the caret at the end of the temporary container's last node
+                    // highlight the selection again
                     const NEW_SELECTION_RANGE: Range = document.createRange();
-                    NEW_SELECTION_RANGE.selectNode(LAST_NODE[0]);
-                    NEW_SELECTION_RANGE.collapse();
+                    NEW_SELECTION_RANGE.setStartBefore(FIRST_NODE[0]);
+                    NEW_SELECTION_RANGE.setEndAfter(LAST_NODE[0]);
 
                     const SELECTION: Selection | null = window.getSelection();
 
