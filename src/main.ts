@@ -720,6 +720,11 @@ class RichTextEditor {
             throw RangeError("That event does not exist");
         }
 
+        if ($.inArray(event, ['format', 'color']) !== -1) {
+            // update selection styles data
+            this.__getStylesInSelection__();
+        }
+
         // invoke listener(s)
         const LISTENERS: Array<Function> = this.EVENT_LISTENERS[event];
         const NUM_OF_LISTENERS: number = LISTENERS.length;
