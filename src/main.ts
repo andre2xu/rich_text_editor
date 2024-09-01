@@ -635,8 +635,6 @@ class RichTextEditor {
                     else {
                         this.__selectAndPlaceCaretInsideElement__(PARENT);
 
-                        this.__updateTextBoxSelectionData__();
-
                         // save reference of empty caret selection format element (in case user wants to make modifications to it before deselecting it)
                         this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = PARENT;
                     }
@@ -647,7 +645,16 @@ class RichTextEditor {
                     );
                 }
                 else {
-                    // target is an ancestor of the care format element
+                    // target is an ancestor of the caret format element
+
+                    TARGET.replaceWith(CARET_FORMAT_ELEMENT[0]);
+
+                    this.__selectAndPlaceCaretInsideElement__(CARET_FORMAT_ELEMENT[0]);
+
+                    this.__triggerEventListeners__(
+                        'format',
+                        FORMAT_EVENT_DATA
+                    );
                 }
             }
             else {
