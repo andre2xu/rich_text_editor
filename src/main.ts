@@ -611,6 +611,11 @@ class RichTextEditor {
             }
 
             if (target_format_element !== undefined) {
+                const FORMAT_EVENT_DATA: RichTextEditorEvent.Format = {
+                    format: format,
+                    action: 'remove'
+                };
+
                 // separate temporary container from target format element
                 GENERAL_HELPERS.separateElementFromSpecificAncestor(TEMPORARY_CONTAINER[0], target_format_element);
 
@@ -631,6 +636,11 @@ class RichTextEditor {
                     }
 
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+
+                    this.__triggerEventListeners__(
+                        'format',
+                        FORMAT_EVENT_DATA
+                    );
                 }
                 else if (SELECTION_TYPE === 'Range') {
                     // move the temporary container's contents outside of the element
@@ -656,6 +666,11 @@ class RichTextEditor {
                         // get rid of the temporary container
                         TEMPORARY_CONTAINER.remove();
                     }
+
+                    this.__triggerEventListeners__(
+                        'format',
+                        FORMAT_EVENT_DATA
+                    );
                 }
                 else {
                     throw TypeError("Invalid selection type");
