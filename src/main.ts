@@ -223,7 +223,15 @@ class RichTextEditor {
 
                         // place the caret at the end of the last node
                         const NEW_SELECTION_RANGE: Range = document.createRange();
-                        NEW_SELECTION_RANGE.selectNode(LAST_NODE[0]);
+                        const NODE_TYPE: number = LAST_NODE[0].nodeType;
+
+                        if (NODE_TYPE === Node.ELEMENT_NODE) {
+                            NEW_SELECTION_RANGE.selectNodeContents(LAST_NODE[0]);
+                        }
+                        else if (NODE_TYPE === Node.TEXT_NODE) {
+                            NEW_SELECTION_RANGE.selectNode(LAST_NODE[0]);
+                        }
+
                         NEW_SELECTION_RANGE.collapse();
 
                         const SELECTION: Selection | null = window.getSelection();
