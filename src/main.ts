@@ -105,7 +105,13 @@ class RichTextEditor {
 
                 this.clearTextBoxLastSelectionData();
 
-                this.__triggerEventListeners__('mouseup', event);
+                this.__triggerEventListeners__(
+                    'mouseup',
+                    {
+                        metaData: event,
+                        styles: this.__getStylesInSelection__()
+                    }
+                );
             }
         });
 
@@ -224,7 +230,13 @@ class RichTextEditor {
                 });
             }
 
-            this.__triggerEventListeners__('keyup', event);
+            this.__triggerEventListeners__(
+                'keyup',
+                {
+                    metaData: event,
+                    styles: this.__getStylesInSelection__()
+                }
+            );
         });
     };
 
@@ -647,23 +659,17 @@ class RichTextEditor {
         }
     };
 
-    __triggerEventListeners__(event: string, originalEventData: JQuery.Event) {
+    __triggerEventListeners__(event: string, eventData: any) {
         if (this.EVENT_LISTENERS[event] === undefined) {
             throw RangeError("That event does not exist");
         }
-
-        // create event object
-        const NEW_EVENT_DATA = {
-            metaData: originalEventData,
-            styles: this.__getStylesInSelection__()
-        };
 
         // invoke listener(s)
         const LISTENERS: Array<Function> = this.EVENT_LISTENERS[event];
         const NUM_OF_LISTENERS: number = LISTENERS.length;
 
         for (let i=0; i < NUM_OF_LISTENERS; i++) {
-            LISTENERS[i](NEW_EVENT_DATA);
+            LISTENERS[i](eventData);
         }
     };
 
