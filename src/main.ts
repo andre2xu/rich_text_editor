@@ -282,6 +282,17 @@ class RichTextEditor {
                     STYLES.formats.push(element.tagName.toLowerCase());
                 });
 
+                if (SELECTION.anchorNode instanceof HTMLElement && FORMAT_HELPERS.isFormatElement(SELECTION.anchorNode)) {
+                    // sometimes the node with the selection is a format element so add its tag to the formats list of the styles object
+
+                    const ELEMENT_WITH_SELECTION: HTMLElement = SELECTION.anchorNode as HTMLElement;
+                    const TAG: string = ELEMENT_WITH_SELECTION.tagName.toLowerCase();
+
+                    if ($.inArray(TAG, this.TEXT_BOX_SELECTION_STYLES.formats) === -1) {
+                        STYLES.formats.push(TAG);
+                    }
+                }
+
                 // get color
                 const COLOR_STRING: string = $(SELECTION.anchorNode).parents(COLOR_HELPERS.COLOR_ELEMENT_SELECTOR).first().css('color');
 
