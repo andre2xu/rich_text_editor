@@ -376,23 +376,19 @@ class RichTextEditor {
             if (SELECTION_TYPE === 'Caret') {
                 // this block only fires when the caret selection element is still empty (because 'keyup' event handler resets last selection data if text was written)
 
-                const RANGE: Range = document.createRange();
-                RANGE.selectNodeContents(SELECTED_ELEMENT);
-                RANGE.surroundContents(formatElement);
+                if (SELECTED_ELEMENT.tagName !== formatElement.tagName) {
+                    const RANGE: Range = document.createRange();
+                    RANGE.selectNodeContents(SELECTED_ELEMENT);
+                    RANGE.surroundContents(formatElement);
 
-                if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
-                    // check if the new color element is inside of an existing one and if so take it out
-                    const PARENT_COLOR_ELEMENT: HTMLElement | undefined = COLOR_HELPERS.getClosestParentColorElement(SELECTED_ELEMENT);
+                    this.__selectAndPlaceCaretInsideElement__(formatElement);
 
-                    if (PARENT_COLOR_ELEMENT !== undefined) {
-                        COLOR_HELPERS.separateColorElementFromParentColorElement(SELECTED_ELEMENT, PARENT_COLOR_ELEMENT);
-                    }
+                    // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
+                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
                 }
-
-                this.__selectAndPlaceCaretInsideElement__(formatElement);
-
-                // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
-                this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
+                else {
+                    this.__selectAndPlaceCaretInsideElement__(SELECTED_ELEMENT);
+                }
 
                 this.__triggerEventListeners__(
                     'format',
