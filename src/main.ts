@@ -326,10 +326,7 @@ class RichTextEditor {
                 });
 
                 if (SELECTION.anchorNode instanceof HTMLElement && FORMAT_HELPERS.isFormatElement(SELECTION.anchorNode)) {
-                    // sometimes the node with the selection is a format element so add its tag to the formats list of the styles object
-
-                    const ELEMENT_WITH_SELECTION: HTMLElement = SELECTION.anchorNode as HTMLElement;
-                    const TAG: string = ELEMENT_WITH_SELECTION.tagName.toLowerCase();
+                    const TAG: string = SELECTION.anchorNode.tagName.toLowerCase();
 
                     if ($.inArray(TAG, this.TEXT_BOX_SELECTION_STYLES.formats) === -1) {
                         STYLES.formats.push(TAG);
@@ -337,10 +334,17 @@ class RichTextEditor {
                 }
 
                 // get color
-                const COLOR_STRING: string = $(SELECTION.anchorNode).parents(COLOR_HELPERS.COLOR_ELEMENT_SELECTOR).first().css('color');
+                let color_string: string | undefined = undefined;
 
-                if (COLOR_STRING !== undefined) {
-                    const RGB_STRINGS: Array<string> = COLOR_STRING.replace(/[a-zA-Z)(]/g, '').split(/, ?/);
+                if (SELECTION.anchorNode instanceof HTMLElement && COLOR_HELPERS.isColorElement(SELECTION.anchorNode)) {
+                    color_string = $(SELECTION.anchorNode).css('color');
+                }
+                else {
+                    color_string = $(SELECTION.anchorNode).parents(COLOR_HELPERS.COLOR_ELEMENT_SELECTOR).first().css('color');
+                }
+
+                if (color_string !== undefined) {
+                    const RGB_STRINGS: Array<string> = color_string.replace(/[a-zA-Z)(]/g, '').split(/, ?/);
 
                     if (RGB_STRINGS.length === 3) {
                         STYLES.textColor = {
