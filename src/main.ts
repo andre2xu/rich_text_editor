@@ -633,6 +633,13 @@ class RichTextEditor {
 
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
 
+                    // delete empty format elements with the same tag
+                    this.TEXT_BOX.find(format).each((_, element: HTMLElement) => {
+                        if (element.innerHTML.length === 0) {
+                            $(element).remove();
+                        }
+                    });
+
                     this.__triggerEventListeners__(
                         'format',
                         FORMAT_EVENT_DATA
