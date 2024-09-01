@@ -445,6 +445,11 @@ class RichTextEditor {
                     // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
                 }
+
+                this.__triggerEventListeners__(
+                    'format',
+                    FORMAT_EVENT_DATA
+                );
             }
         }
         else if (this.__selectionInTextBoxExists__()) {
@@ -546,6 +551,11 @@ class RichTextEditor {
 
                     GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
                 }
+
+                this.__triggerEventListeners__(
+                    'format',
+                    FORMAT_EVENT_DATA
+                );
             }
             else {
                 throw TypeError("Invalid selection type");
