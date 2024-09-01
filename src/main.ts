@@ -105,19 +105,7 @@ class RichTextEditor {
 
                 this.clearTextBoxLastSelectionData();
 
-                // create mouseup event object
-                const MOUSEUP_EVENT_DATA: RichTextEditorEvent.MouseUp = {
-                    metaData: event,
-                    styles: this.__getStylesInSelection__()
-                };
-
-                // invoke mouseup listener(s)
-                const MOUSEUP_LISTENERS: Array<Function> = this.EVENT_LISTENERS.mouseup;
-                const NUM_OF_MOUSEUP_LISTENERS: number = MOUSEUP_LISTENERS.length;
-
-                for (let i=0; i < NUM_OF_MOUSEUP_LISTENERS; i++) {
-                    MOUSEUP_LISTENERS[i](MOUSEUP_EVENT_DATA);
-                }
+                this.__triggerEventListeners__('mouseup', event);
             }
         });
 
@@ -236,19 +224,7 @@ class RichTextEditor {
                 });
             }
 
-            // create keyup event object
-            const KEYUP_EVENT_DATA: RichTextEditorEvent.KeyUp = {
-                metaData: event,
-                styles: this.__getStylesInSelection__()
-            };
-
-            // invoke mouseup listener(s)
-            const KEYUP_LISTENERS: Array<Function> = this.EVENT_LISTENERS.keyup;
-            const NUM_OF_MOUSEUP_LISTENERS: number = KEYUP_LISTENERS.length;
-
-            for (let i=0; i < NUM_OF_MOUSEUP_LISTENERS; i++) {
-                KEYUP_LISTENERS[i](KEYUP_EVENT_DATA);
-            }
+            this.__triggerEventListeners__('keyup', event);
         });
     };
 
@@ -668,6 +644,26 @@ class RichTextEditor {
                     this.applyStrikethrough();
                     break;
             }
+        }
+    };
+
+    __triggerEventListeners__(event: string, originalEventData: JQuery.Event) {
+        if (this.EVENT_LISTENERS[event] === undefined) {
+            throw RangeError("That event does not exist");
+        }
+
+        // create event object
+        const NEW_EVENT_DATA = {
+            metaData: originalEventData,
+            styles: this.__getStylesInSelection__()
+        };
+
+        // invoke listener(s)
+        const LISTENERS: Array<Function> = this.EVENT_LISTENERS[event];
+        const NUM_OF_LISTENERS: number = LISTENERS.length;
+
+        for (let i=0; i < NUM_OF_LISTENERS; i++) {
+            LISTENERS[i](NEW_EVENT_DATA);
         }
     };
 
