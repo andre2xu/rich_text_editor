@@ -132,6 +132,15 @@ class RichTextEditor {
             - Delete temporary containers
             */
 
+            // invoke listeners before selection data update (to avoid styles not being detected due to caret movement)
+            this.__triggerEventListeners__(
+                'keyup',
+                {
+                    metaData: event,
+                    styles: this.__getStylesInSelection__()
+                }
+            );
+
             // update current selection data
             this.__updateTextBoxSelectionData__();
 
@@ -229,14 +238,6 @@ class RichTextEditor {
                     CONTAINER.remove();
                 });
             }
-
-            this.__triggerEventListeners__(
-                'keyup',
-                {
-                    metaData: event,
-                    styles: this.__getStylesInSelection__()
-                }
-            );
         });
     };
 
