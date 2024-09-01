@@ -281,7 +281,42 @@ class RichTextEditor {
             textColor: undefined
         };
 
-        if (this.__selectionInTextBoxExists__()) {
+        if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Range') {
+            const SELECTED_ELEMENT: JQuery<HTMLElement> = $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
+            const TAG: string = SELECTED_ELEMENT[0].tagName.toLowerCase();
+
+            // get formats
+            SELECTED_ELEMENT.parents(FORMAT_HELPERS.FORMAT_ELEMENT_SELECTOR).each((_, element: HTMLElement) => {
+                STYLES.formats.push(element.tagName.toLowerCase());
+            });
+
+            if (FORMAT_HELPERS.isFormatElement(SELECTED_ELEMENT[0]) && $.inArray(TAG, STYLES.formats) === -1) {
+                STYLES.formats.push(TAG);
+            }
+
+            // get color
+            let color_string: string | undefined = undefined;
+
+            if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT[0])) {
+                color_string = SELECTED_ELEMENT.css('color');
+            }
+            else {
+                color_string = SELECTED_ELEMENT.parents(COLOR_HELPERS.COLOR_ELEMENT_SELECTOR).first().css('color');
+            }
+
+            if (color_string !== undefined && color_string.length > 0) {
+                const RGB_STRINGS: Array<string> = color_string.replace(/[a-zA-Z)(]/g, '').split(/, ?/);
+
+                if (RGB_STRINGS.length === 3) {
+                    STYLES.textColor = {
+                        r: parseInt(RGB_STRINGS[0]),
+                        g: parseInt(RGB_STRINGS[1]),
+                        b: parseInt(RGB_STRINGS[2])
+                    };
+                }
+            }
+        }
+        else if (this.__selectionInTextBoxExists__()) {
             const SELECTION = this.TEXT_BOX_SELECTION_DATA.selection as Selection;
 
             if (SELECTION.anchorNode !== null && SELECTION.focusNode !== null && SELECTION.anchorNode === SELECTION.focusNode) {
