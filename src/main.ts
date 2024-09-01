@@ -585,50 +585,70 @@ class RichTextEditor {
             };
 
             if (SELECTION_TYPE === 'Caret' && SELECTION_RANGE.startContainer instanceof HTMLElement && SELECTION_RANGE.startContainer.innerHTML === '\u200b') {
-                // this block only runs when the user clicks the same format button a second time without typing anything into the caret element (i.e. they want to undo the format)
+                // this block only runs when the user clicks on a format button that's already active without typing anything into the caret selection element (i.e. they want to undo a format that's been applied to the caret selection)
 
                 const CARET_FORMAT_ELEMENT: JQuery<HTMLElement> = $(SELECTION_RANGE.startContainer);
-                const PARENT: HTMLElement = CARET_FORMAT_ELEMENT.parent()[0];
 
-                // move the caret element's zero-width space character out and delete it after
-                CARET_FORMAT_ELEMENT.contents().insertAfter(CARET_FORMAT_ELEMENT[0]);
-                CARET_FORMAT_ELEMENT.remove();
+                const TARGET: JQuery<HTMLElement> = CARET_FORMAT_ELEMENT.parents(format).first();
 
-                GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
+                if (TARGET[0] === undefined) {
+                    // target is the caret format element
 
-                // find the zero-width space character and place caret at the end of it
-                $(PARENT.childNodes).each((_, node: NodeListOf<ChildNode>) => {
-                    if (node instanceof Node && node.nodeType === Node.TEXT_NODE && node.nodeValue !== null) {
-                        const ZWSC_POSITION: number = node.nodeValue.indexOf('\u200b');
+                    CARET_FORMAT_ELEMENT.contents().insertAfter(CARET_FORMAT_ELEMENT[0]);
 
-                        if (ZWSC_POSITION !== -1) {
-                            // delete zero-width space character since it's no longer needed to find the caret's original position
-                            node.nodeValue = node.nodeValue.replace('\u200b', '');
+                    const PARENT: HTMLElement = CARET_FORMAT_ELEMENT.parent()[0];
 
-                            // make the caret re-appear at its original position
-                            const NEW_CARET_SELECTION_RANGE: Range = document.createRange();
-                            NEW_CARET_SELECTION_RANGE.setStart(node, ZWSC_POSITION);
-                            NEW_CARET_SELECTION_RANGE.collapse();
+                    CARET_FORMAT_ELEMENT.remove();
 
-                            const SELECTION: Selection | null = window.getSelection();
+                    if (PARENT.innerHTML !== '\u200b') {
+                        GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
 
-                            if (SELECTION !== null) {
-                                SELECTION.removeAllRanges();
-                                SELECTION.addRange(NEW_CARET_SELECTION_RANGE);
+                        // find the zero-width space character and place caret at the end of it
+                        $(PARENT.childNodes).each((_, node: NodeListOf<ChildNode>) => {
+                            if (node instanceof Node && node.nodeType === Node.TEXT_NODE && node.nodeValue !== null) {
+                                const ZWSC_POSITION: number = node.nodeValue.indexOf('\u200b');
 
-                                this.__updateTextBoxSelectionData__();
+                                if (ZWSC_POSITION !== -1) {
+                                    // delete zero-width space character since it's no longer needed to find the caret's original position
+                                    node.nodeValue = node.nodeValue.replace('\u200b', '');
 
-                                this.__triggerEventListeners__(
-                                    'format',
-                                    FORMAT_EVENT_DATA
-                                );
+                                    // make the caret re-appear at its original position
+                                    const NEW_CARET_SELECTION_RANGE: Range = document.createRange();
+                                    NEW_CARET_SELECTION_RANGE.setStart(node, ZWSC_POSITION);
+                                    NEW_CARET_SELECTION_RANGE.collapse();
+
+                                    const SELECTION: Selection | null = window.getSelection();
+
+                                    if (SELECTION !== null) {
+                                        SELECTION.removeAllRanges();
+                                        SELECTION.addRange(NEW_CARET_SELECTION_RANGE);
+
+                                        this.__updateTextBoxSelectionData__();
+                                    }
+
+                                    // stop loop
+                                    return false;
+                                }
                             }
-
-                            // stop loop
-                            return false;
-                        }
+                        });
                     }
-                });
+                    else {
+                        this.__selectAndPlaceCaretInsideElement__(PARENT);
+
+                        this.__updateTextBoxSelectionData__();
+
+                        // save reference of empty caret selection format element (in case user wants to make modifications to it before deselecting it)
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = PARENT;
+                    }
+
+                    this.__triggerEventListeners__(
+                        'format',
+                        FORMAT_EVENT_DATA
+                    );
+                }
+                else {
+                    // target is an ancestor of the care format element
+                }
             }
             else {
                 const TEMPORARY_CONTAINER: JQuery<HTMLElement> = $(document.createElement('span'));
