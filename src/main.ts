@@ -38,7 +38,8 @@ namespace RichTextEditorEvent {
     };
 
     export interface Format {
-        format: string
+        format: string,
+        action: string // apply OR remove
     };
 
     export interface Color {
@@ -363,6 +364,11 @@ class RichTextEditor {
             throw TypeError("Format element must be one of the following: <b>, <i>, <u>, <s>");
         }
 
+        const FORMAT_EVENT_DATA: RichTextEditorEvent.Format = {
+            format: formatElement.tagName.toLowerCase(),
+            action: 'apply'
+        };
+
         if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
             const SELECTED_ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
             const SELECTION_TYPE: string = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType;
@@ -387,6 +393,11 @@ class RichTextEditor {
 
                 // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
                 this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
+
+                this.__triggerEventListeners__(
+                    'format',
+                    FORMAT_EVENT_DATA
+                );
             }
             else if (SELECTION_TYPE === 'Range') {
                 const RANGE: Range = document.createRange();
@@ -470,6 +481,11 @@ class RichTextEditor {
 
                     WINDOW_SELECTION.addRange(this.TEXT_BOX_SELECTION_DATA.range as Range);
                 }
+
+                this.__triggerEventListeners__(
+                    'format',
+                    FORMAT_EVENT_DATA
+                );
             }
             else if (SELECTION_TYPE === 'Range') {
                 const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
