@@ -142,6 +142,37 @@ window.addEventListener('load', () => {
     });
 
     RTE.addEventListener('format', (event) => {
-        
+        if (event.action === 'apply') {
+            switch (event.format) {
+                case 'b':
+                    $('#bold').addClass('selected');
+                    break;
+                case 'i':
+                    $('#italic').addClass('selected');
+                    break;
+                case 'u':
+                    $('#underline').addClass('selected');
+                    break;
+                case 's':
+                    $('#strikethrough').addClass('selected');
+                    break;
+            }
+        }
+        else if (event.action === 'remove') {
+            switch (event.format) {
+                case 'b':
+                    $('#bold').removeClass('selected');
+                    break;
+                case 'i':
+                    $('#italic').removeClass('selected');
+                    break;
+                case 'u':
+                    $('#underline').removeClass('selected');
+                    break;
+                case 's':
+                    $('#strikethrough').removeClass('selected');
+                    break;
+            }
+        }
     });
 });
