@@ -579,115 +579,163 @@ class RichTextEditor {
             const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
             const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
 
-            const TEMPORARY_CONTAINER: JQuery<HTMLElement> = $(document.createElement('span'));
-            TEMPORARY_CONTAINER.addClass(this.TEMPORARY_CONTAINER_CLASS);
+            const FORMAT_EVENT_DATA: RichTextEditorEvent.Format = {
+                format: format,
+                action: 'remove'
+            };
 
-            SELECTION_RANGE.surroundContents(TEMPORARY_CONTAINER[0]);
+            if (SELECTION_TYPE === 'Caret' && SELECTION_RANGE.startContainer instanceof HTMLElement && SELECTION_RANGE.startContainer.innerHTML === '\u200b') {
+                // this block only runs when the user clicks the same format button a second time without typing anything into the caret element (i.e. they want to undo the format)
 
-            let styled_container: HTMLElement | undefined = undefined;
-            let target_format_element: HTMLElement | undefined = undefined;
+                const CARET_FORMAT_ELEMENT: JQuery<HTMLElement> = $(SELECTION_RANGE.startContainer);
+                const PARENT: HTMLElement = CARET_FORMAT_ELEMENT.parent()[0];
 
-            TEMPORARY_CONTAINER.parents().each((_, parent: HTMLElement) => {
-                const TAG: string = parent.tagName.toLowerCase();
+                // move the caret element's zero-width space character out and delete it after
+                CARET_FORMAT_ELEMENT.contents().insertAfter(CARET_FORMAT_ELEMENT[0]);
+                CARET_FORMAT_ELEMENT.remove();
 
-                if (TAG === format) {
-                    // stop when the target format has been reached
-                    target_format_element = parent;
+                GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
 
-                    return false;
-                }
+                // find the zero-width space character and place caret at the end of it
+                $(PARENT.childNodes).each((_, node: NodeListOf<ChildNode>) => {
+                    if (node instanceof Node && node.nodeType === Node.TEXT_NODE && node.nodeValue !== null) {
+                        const ZWSC_POSITION: number = node.nodeValue.indexOf('\u200b');
 
-                // recreate the selection's styles but exclude the target format
-                const STYLE_ELEMENT: HTMLElement = document.createElement(TAG);
+                        if (ZWSC_POSITION !== -1) {
+                            // delete zero-width space character since it's no longer needed to find the caret's original position
+                            node.nodeValue = node.nodeValue.replace('\u200b', '');
 
-                if (FORMAT_HELPERS.isFormatElement(STYLE_ELEMENT) || COLOR_HELPERS.isColorElement(STYLE_ELEMENT)) {
-                    if (styled_container === undefined) {
-                        styled_container = STYLE_ELEMENT;
-                    }
-                    else {
-                        STYLE_ELEMENT.appendChild(styled_container);
+                            // make the caret re-appear at its original position
+                            const NEW_CARET_SELECTION_RANGE: Range = document.createRange();
+                            NEW_CARET_SELECTION_RANGE.setStart(node, ZWSC_POSITION);
+                            NEW_CARET_SELECTION_RANGE.collapse();
 
-                        styled_container = STYLE_ELEMENT;
-                    }
-                }
-            });
+                            const SELECTION: Selection | null = window.getSelection();
 
-            // put the modified version of the selection's styled container inside the temporary container
-            if (styled_container !== undefined) {
-                TEMPORARY_CONTAINER.append(styled_container);
-            }
+                            if (SELECTION !== null) {
+                                SELECTION.removeAllRanges();
+                                SELECTION.addRange(NEW_CARET_SELECTION_RANGE);
 
-            if (target_format_element !== undefined) {
-                const FORMAT_EVENT_DATA: RichTextEditorEvent.Format = {
-                    format: format,
-                    action: 'remove'
-                };
+                                this.__updateTextBoxSelectionData__();
 
-                // separate temporary container from target format element
-                GENERAL_HELPERS.separateElementFromSpecificAncestor(TEMPORARY_CONTAINER[0], target_format_element);
+                                this.__triggerEventListeners__(
+                                    'format',
+                                    FORMAT_EVENT_DATA
+                                );
+                            }
 
-                if (SELECTION_TYPE === 'Caret') {
-                    const INNERMOST_ELEMENT: JQuery<HTMLElement> = TEMPORARY_CONTAINER.find('*').last();
-
-                    if (INNERMOST_ELEMENT[0] !== undefined) {
-                        INNERMOST_ELEMENT.text('\u200b');
-
-                        // make caret re-appear inside the temporary container's innermost element
-                        this.__selectAndPlaceCaretInsideElement__(INNERMOST_ELEMENT[0]);
-                    }
-                    else {
-                        TEMPORARY_CONTAINER.text('\u200b');
-
-                        // make caret re-appear inside the temporary container
-                        this.__selectAndPlaceCaretInsideElement__(TEMPORARY_CONTAINER[0]);
-                    }
-
-                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
-
-                    // delete empty format elements with the same tag
-                    this.TEXT_BOX.find(format).each((_, element: HTMLElement) => {
-                        if (element.innerHTML.length === 0) {
-                            $(element).remove();
+                            // stop loop
+                            return false;
                         }
-                    });
+                    }
+                });
+            }
+            else {
+                const TEMPORARY_CONTAINER: JQuery<HTMLElement> = $(document.createElement('span'));
+                TEMPORARY_CONTAINER.addClass(this.TEMPORARY_CONTAINER_CLASS);
 
-                    this.__triggerEventListeners__(
-                        'format',
-                        FORMAT_EVENT_DATA
-                    );
-                }
-                else if (SELECTION_TYPE === 'Range') {
-                    // move the temporary container's contents outside of the element
-                    const CONTENTS: JQuery<HTMLElement | Document | Text | Comment> = TEMPORARY_CONTAINER.contents();
-                    const FIRST_NODE: JQuery<HTMLElement | Document | Text | Comment> = CONTENTS.first();
-                    const LAST_NODE: JQuery<HTMLElement | Document | Text | Comment> = CONTENTS.last();
+                SELECTION_RANGE.surroundContents(TEMPORARY_CONTAINER[0]);
 
-                    CONTENTS.insertBefore(TEMPORARY_CONTAINER[0]);
+                let styled_container: HTMLElement | undefined = undefined;
+                let target_format_element: HTMLElement | undefined = undefined;
 
-                    // highlight the selection again
-                    const NEW_SELECTION_RANGE: Range = document.createRange();
-                    NEW_SELECTION_RANGE.setStartBefore(FIRST_NODE[0]);
-                    NEW_SELECTION_RANGE.setEndAfter(LAST_NODE[0]);
+                TEMPORARY_CONTAINER.parents().each((_, parent: HTMLElement) => {
+                    const TAG: string = parent.tagName.toLowerCase();
 
-                    const SELECTION: Selection | null = window.getSelection();
+                    if (TAG === format) {
+                        // stop when the target format has been reached
+                        target_format_element = parent;
 
-                    if (SELECTION !== null) {
-                        SELECTION.removeAllRanges();
-                        SELECTION.addRange(NEW_SELECTION_RANGE);
-
-                        this.__updateTextBoxSelectionData__();
-
-                        // get rid of the temporary container
-                        TEMPORARY_CONTAINER.remove();
+                        return false;
                     }
 
-                    this.__triggerEventListeners__(
-                        'format',
-                        FORMAT_EVENT_DATA
-                    );
+                    // recreate the selection's styles but exclude the target format
+                    const STYLE_ELEMENT: HTMLElement = document.createElement(TAG);
+
+                    if (FORMAT_HELPERS.isFormatElement(STYLE_ELEMENT) || COLOR_HELPERS.isColorElement(STYLE_ELEMENT)) {
+                        if (styled_container === undefined) {
+                            styled_container = STYLE_ELEMENT;
+                        }
+                        else {
+                            STYLE_ELEMENT.appendChild(styled_container);
+
+                            styled_container = STYLE_ELEMENT;
+                        }
+                    }
+                });
+
+                // put the modified version of the selection's styled container inside the temporary container
+                if (styled_container !== undefined) {
+                    TEMPORARY_CONTAINER.append(styled_container);
                 }
-                else {
-                    throw TypeError("Invalid selection type");
+
+                if (target_format_element !== undefined) {
+                    // separate temporary container from target format element
+                    GENERAL_HELPERS.separateElementFromSpecificAncestor(TEMPORARY_CONTAINER[0], target_format_element);
+
+                    if (SELECTION_TYPE === 'Caret') {
+                        const INNERMOST_ELEMENT: JQuery<HTMLElement> = TEMPORARY_CONTAINER.find('*').last();
+
+                        if (INNERMOST_ELEMENT[0] !== undefined) {
+                            INNERMOST_ELEMENT.text('\u200b');
+
+                            // make caret re-appear inside the temporary container's innermost element
+                            this.__selectAndPlaceCaretInsideElement__(INNERMOST_ELEMENT[0]);
+                        }
+                        else {
+                            TEMPORARY_CONTAINER.text('\u200b');
+
+                            // make caret re-appear inside the temporary container
+                            this.__selectAndPlaceCaretInsideElement__(TEMPORARY_CONTAINER[0]);
+                        }
+
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+
+                        // delete empty format elements with the same tag
+                        this.TEXT_BOX.find(format).each((_, element: HTMLElement) => {
+                            if (element.innerHTML.length === 0) {
+                                $(element).remove();
+                            }
+                        });
+
+                        this.__triggerEventListeners__(
+                            'format',
+                            FORMAT_EVENT_DATA
+                        );
+                    }
+                    else if (SELECTION_TYPE === 'Range') {
+                        // move the temporary container's contents outside of the element
+                        const CONTENTS: JQuery<HTMLElement | Document | Text | Comment> = TEMPORARY_CONTAINER.contents();
+                        const FIRST_NODE: JQuery<HTMLElement | Document | Text | Comment> = CONTENTS.first();
+                        const LAST_NODE: JQuery<HTMLElement | Document | Text | Comment> = CONTENTS.last();
+
+                        CONTENTS.insertBefore(TEMPORARY_CONTAINER[0]);
+
+                        // highlight the selection again
+                        const NEW_SELECTION_RANGE: Range = document.createRange();
+                        NEW_SELECTION_RANGE.setStartBefore(FIRST_NODE[0]);
+                        NEW_SELECTION_RANGE.setEndAfter(LAST_NODE[0]);
+
+                        const SELECTION: Selection | null = window.getSelection();
+
+                        if (SELECTION !== null) {
+                            SELECTION.removeAllRanges();
+                            SELECTION.addRange(NEW_SELECTION_RANGE);
+
+                            this.__updateTextBoxSelectionData__();
+
+                            // get rid of the temporary container
+                            TEMPORARY_CONTAINER.remove();
+                        }
+
+                        this.__triggerEventListeners__(
+                            'format',
+                            FORMAT_EVENT_DATA
+                        );
+                    }
+                    else {
+                        throw TypeError("Invalid selection type");
+                    }
                 }
             }
         }
