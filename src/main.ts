@@ -649,7 +649,8 @@ class RichTextEditor {
                 GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
             }
             else {
-
+                TARGET.contents().insertAfter(TARGET[0]);
+                TARGET.remove();
             }
 
             this.__triggerEventListeners__(
