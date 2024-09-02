@@ -634,7 +634,7 @@ class RichTextEditor {
 
             const HIGHLIGHTED_ELEMENT: JQuery<HTMLElement> = $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
 
-            const TARGET: JQuery<HTMLElement> = HIGHLIGHTED_ELEMENT.find(format).first();
+            const TARGET: JQuery<HTMLElement> = HIGHLIGHTED_ELEMENT.parents(format).first();
 
             if (TARGET[0] === undefined) {
                 // target is the highlighted element
