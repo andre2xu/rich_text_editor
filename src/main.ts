@@ -285,8 +285,8 @@ class RichTextEditor {
             const SELECTED_ELEMENT: JQuery<HTMLElement> = $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
             const TAG: string = SELECTED_ELEMENT[0].tagName.toLowerCase();
 
-            // get formats (they will be descendants not ancestors due to range formatting mechanics)
-            SELECTED_ELEMENT.find(FORMAT_HELPERS.FORMAT_ELEMENT_SELECTOR).each((_, element: HTMLElement) => {
+            // get formats
+            SELECTED_ELEMENT.parents(FORMAT_HELPERS.FORMAT_ELEMENT_SELECTOR).each((_, element: HTMLElement) => {
                 STYLES.formats.push(element.tagName.toLowerCase());
             });
 
