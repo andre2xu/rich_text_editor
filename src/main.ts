@@ -622,14 +622,42 @@ class RichTextEditor {
             throw RangeError(`Format must be one of the following: ${FORMAT_HELPERS.FORMAT_ELEMENT_SELECTOR}`);
         }
 
-        if (this.__selectionInTextBoxExists__()) {
+        const FORMAT_EVENT_DATA: RichTextEditorEvent.Format = {
+            format: format,
+            action: 'remove'
+        };
+
+        if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType === 'Range' && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null) {
+            // this block handles removal of formats in highlighted range selections
+
+            const HIGHLIGHTED_ELEMENT: JQuery<HTMLElement> = $(this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection);
+
+            const TARGET: JQuery<HTMLElement> = HIGHLIGHTED_ELEMENT.find(format).first();
+
+            if (TARGET[0] === undefined) {
+                // target is the highlighted element
+
+                const CONTENTS: JQuery<HTMLElement | Text | Comment | Document> = HIGHLIGHTED_ELEMENT.contents();
+
+                const PARENT: HTMLElement = HIGHLIGHTED_ELEMENT.parent()[0];
+
+                CONTENTS.insertAfter(HIGHLIGHTED_ELEMENT[0]);
+                HIGHLIGHTED_ELEMENT.remove();
+
+                GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
+            }
+            else {
+
+            }
+
+            this.__triggerEventListeners__(
+                'format',
+                FORMAT_EVENT_DATA
+            );
+        }
+        else if (this.__selectionInTextBoxExists__()) {
             const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range;
             const SELECTION_TYPE: string = this.TEXT_BOX_SELECTION_DATA.selection?.type as string;
-
-            const FORMAT_EVENT_DATA: RichTextEditorEvent.Format = {
-                format: format,
-                action: 'remove'
-            };
 
             if (SELECTION_TYPE === 'Caret' && SELECTION_RANGE.startContainer instanceof HTMLElement && SELECTION_RANGE.startContainer.innerHTML === '\u200b') {
                 // this block only runs when the user clicks on a format button that's already active without typing anything into the caret selection element (i.e. they want to undo a format that's been applied to the caret selection)
