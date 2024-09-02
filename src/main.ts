@@ -585,17 +585,19 @@ class RichTextEditor {
                         GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(FORMAT_ELEMENT[0]);
                     };
 
-                    // get rid of any empty elements left
-                    GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
+                    if (this.TEXT_BOX[0].contains(FORMAT_ELEMENT[0])) {
+                        // get rid of any empty elements left
+                        GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
 
-                    // highlight selection again
-                    this.__selectAndHighlightElement__(FORMAT_ELEMENT[0]);
+                        // highlight selection again
+                        this.__selectAndHighlightElement__(FORMAT_ELEMENT[0]);
 
-                    // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
-                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = FORMAT_ELEMENT[0];
+                        // save reference of formatted selection (in case user wants to make modifications to it before deselecting it)
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = FORMAT_ELEMENT[0];
 
-                    // save selection type
-                    this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+                        // save selection type
+                        this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+                    }
                 }
                 else {
                     // undo formatting
