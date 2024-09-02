@@ -597,6 +597,14 @@ class RichTextEditor {
 
                         // save selection type
                         this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+
+                        this.__triggerEventListeners__(
+                            'format',
+                            FORMAT_EVENT_DATA
+                        );
+                    }
+                    else {
+                        GENERAL_HELPERS.deleteAllEmptyDescendants(this.TEXT_BOX[0]);
                     }
                 }
                 else {
@@ -606,12 +614,12 @@ class RichTextEditor {
                     FORMAT_ELEMENT.replaceWith(FORMAT_ELEMENT.contents());
 
                     GENERAL_HELPERS.mergeSimilarAdjacentChildNodes(PARENT);
-                }
 
-                this.__triggerEventListeners__(
-                    'format',
-                    FORMAT_EVENT_DATA
-                );
+                    this.__triggerEventListeners__(
+                        'format',
+                        FORMAT_EVENT_DATA
+                    );
+                }
             }
             else {
                 throw TypeError("Invalid selection type");
