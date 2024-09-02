@@ -464,7 +464,7 @@ class RichTextEditor {
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = formatElement;
                 }
                 else {
-                    RANGE.selectNode(SELECTED_ELEMENT);
+                    RANGE.selectNodeContents(SELECTED_ELEMENT);
                     RANGE.surroundContents(formatElement);
 
                     // check if the new format element has descendants with the same tag and if so remove them but keep their contents
