@@ -753,9 +753,7 @@ class RichTextEditor {
                 let target_format_element: HTMLElement | undefined = undefined;
 
                 TEMPORARY_CONTAINER.parents().each((_, parent: HTMLElement) => {
-                    const TAG: string = parent.tagName.toLowerCase();
-
-                    if (TAG === format) {
+                    if (parent.tagName.toLowerCase() === format) {
                         // stop when the target format has been reached
                         target_format_element = parent;
 
@@ -763,7 +761,7 @@ class RichTextEditor {
                     }
 
                     // recreate the selection's styles but exclude the target format
-                    const STYLE_ELEMENT: HTMLElement = document.createElement(TAG);
+                    const STYLE_ELEMENT: HTMLElement = parent.cloneNode() as HTMLElement;
 
                     if (FORMAT_HELPERS.isFormatElement(STYLE_ELEMENT) || COLOR_HELPERS.isColorElement(STYLE_ELEMENT)) {
                         if (styled_container === undefined) {
