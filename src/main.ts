@@ -859,16 +859,16 @@ class RichTextEditor {
         else {
             switch (format) {
                 case 'b':
-                    this.applyBold();
+                    this.__applyFormat__(document.createElement('b'));
                     break;
                 case 'i':
-                    this.applyItalic();
+                    this.__applyFormat__(document.createElement('i'));
                     break;
                 case 'u':
-                    this.applyUnderline();
+                    this.__applyFormat__(document.createElement('u'));
                     break;
                 case 's':
-                    this.applyStrikethrough();
+                    this.__applyFormat__(document.createElement('s'));
                     break;
             }
         }
@@ -1070,22 +1070,6 @@ class RichTextEditor {
                 throw TypeError("Invalid selection type");
             }
         }
-    };
-
-    applyBold() {
-        this.__applyFormat__(document.createElement('b'));
-    };
-
-    applyItalic() {
-        this.__applyFormat__(document.createElement('i'));
-    };
-
-    applyUnderline() {
-        this.__applyFormat__(document.createElement('u'));
-    };
-
-    applyStrikethrough() {
-        this.__applyFormat__(document.createElement('s'));
     };
 
     toggleBold() {
