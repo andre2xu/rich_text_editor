@@ -57,7 +57,7 @@ export default [
 		input: 'src/index.ts',
 		output: {
 			name: 'index',
-			file: 'dist/index.js',
+			file: 'index.js',
 			format: 'iife' // for script tags
 		},
 		plugins: [
