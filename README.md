@@ -45,3 +45,5 @@ If you want to install the project as an npm dependency, try one of <a href="htt
 - You can do whatever you want with the free version but for the premium version please visit my website for more info.
 
 - I won't be publishing this project on npm because the free version is an incomplete product and the premium one contains my proprietary code.
+
+- The free version is not perfect. It has bugs that have been fixed in the premium version. I had to rewrite a lot of the logic to make it more robust to different edge cases.
