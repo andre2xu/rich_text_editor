@@ -1,6 +1,6 @@
 # Rich Text Editor &nbsp; ![JavaScript](https://shields.io/badge/JavaScript-F7DF1E?logo=JavaScript&logoColor=000&style=flat-square) ![TypeScript](https://shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=FFF&style=flat-square)<br>
 
-This is a class that allows you to build your own rich text editor. It provides methods for applying styles to text, leaving the interface design completely up to you.
+This is a class that allows you to build your own rich text editor. It provides methods for applying styles to text and leaves the interface design completely up to you.
 
 The free version has limited features so to access the rest you must purchase the premium version on my website [INSERT LINK HERE].<br><br>
 
