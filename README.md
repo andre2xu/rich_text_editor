@@ -38,7 +38,7 @@ See ***src/index.ts*** to learn how to use the rich text editor's public methods
 
 The class itself will be in the 'dist' folder after you run the build/watch script. Choose the appropriate rich text editor JS file for your project.
 
-If you want to install the project as an npm dependency, try one of <a href="https://stackoverflow.com/questions/8088795/installing-a-local-module-using-npm" target="_blank">these methods</a>. They typically involve symbolic linking. The local module will be the 'dist' folder. I recommend copying it and deleting the index.js file.
+If you want to install the project as an npm dependency, try one of <a href="https://stackoverflow.com/questions/8088795/installing-a-local-module-using-npm" target="_blank">these methods</a>. They typically involve symbolic linking. The local module will be the 'dist' folder. I recommend making a copy of it and using that as the dependency.
 <br><br>
 
 ## IMPORTANT
