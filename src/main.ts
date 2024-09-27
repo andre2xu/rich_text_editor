@@ -88,7 +88,7 @@ class RichTextEditor {
         this.TEXT_BOX = $(ELEMENT);
 
         // make sure the text box div is empty
-        // this.TEXT_BOX.empty();
+        this.TEXT_BOX.empty();
 
         // set text box attributes
         this.TEXT_BOX.prop('contenteditable', true);
