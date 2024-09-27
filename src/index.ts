@@ -3,7 +3,7 @@ import $ from 'jquery';
 import RichTextEditor, {RichTextEditorStyles, TextColor} from './main';
 
 window.addEventListener('load', () => {
-    const RTE: RichTextEditor = new RichTextEditor('text-box');
+    const RTE: RichTextEditor = new RichTextEditor('text-box', false);
 
 
     // FONT FORMATS

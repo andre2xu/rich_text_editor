@@ -78,7 +78,7 @@ class RichTextEditor {
     };
     TEMPORARY_CONTAINER_CLASS: string = 'temporary-rte-container';
 
-    constructor(textBoxId: string) {
+    constructor(textBoxId: string, emptyTextBox: boolean = true) {
         const ELEMENT: HTMLElement | null = document.getElementById(textBoxId);
 
         if (typeof textBoxId !== 'string' || ELEMENT === null || ELEMENT instanceof HTMLDivElement === false) {
@@ -87,8 +87,9 @@ class RichTextEditor {
 
         this.TEXT_BOX = $(ELEMENT);
 
-        // make sure the text box div is empty
-        this.TEXT_BOX.empty();
+        if (emptyTextBox) {
+            this.TEXT_BOX.empty();
+        }
 
         // set text box attributes
         this.TEXT_BOX.prop('contenteditable', true);
