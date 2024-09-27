@@ -922,6 +922,15 @@ class RichTextEditor {
         COLOR_ELEMENT.attr('data-type', 'color');
         COLOR_ELEMENT.css('color', `rgb(${r},${g},${b})`);
 
+        // create event data
+        const COLOR_EVENT_DATA: RichTextEditorEvent.Color = {
+            textColor: {
+                r: r,
+                g: g,
+                b: b
+            }
+        };
+
         if (this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection !== null && this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType !== null) {
             const SELECTED_ELEMENT: HTMLElement = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection;
             const SELECTION_TYPE: string = this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType;
@@ -949,6 +958,11 @@ class RichTextEditor {
                     // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
                 }
+
+                this.__triggerEventListeners__(
+                    'color',
+                    COLOR_EVENT_DATA
+                );
             }
             else if (SELECTION_TYPE === 'Range') {
                 if (COLOR_HELPERS.isColorElement(SELECTED_ELEMENT)) {
@@ -996,6 +1010,11 @@ class RichTextEditor {
                     // save reference of colored selection (in case user wants to make modifications to it before deselecting it)
                     this.TEXT_BOX_LAST_SELECTION_DATA.lastSelection = COLOR_ELEMENT[0];
                 }
+
+                this.__triggerEventListeners__(
+                    'color',
+                    COLOR_EVENT_DATA
+                );
             }
         }
         else if (this.__selectionInTextBoxExists__()) {
@@ -1018,6 +1037,11 @@ class RichTextEditor {
 
                 // save selection type
                 this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+
+                this.__triggerEventListeners__(
+                    'color',
+                    COLOR_EVENT_DATA
+                );
             }
             else if (SELECTION_TYPE === 'Range') {
                 const SELECTION_RANGE: Range = this.TEXT_BOX_SELECTION_DATA.range as Range
@@ -1065,6 +1089,11 @@ class RichTextEditor {
 
                 // save selection type
                 this.TEXT_BOX_LAST_SELECTION_DATA.lastSelectionType = SELECTION_TYPE;
+
+                this.__triggerEventListeners__(
+                    'color',
+                    COLOR_EVENT_DATA
+                );
             }
             else {
                 throw TypeError("Invalid selection type");
