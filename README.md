@@ -2,7 +2,7 @@
 
 This is a class that allows you to build your own rich text editor. It provides methods for applying styles to text and leaves the interface design completely up to you.
 
-The free version has limited features so to access the rest you must purchase the premium version on my website [INSERT LINK HERE].<br><br>
+The free version (<a href="https://andre2xu.github.io/rich_text_editor/">view demo</a>) has limited features so to access the rest you must purchase the premium version on my website [INSERT LINK HERE].<br><br>
 
 ## Features
 *Free Version*
