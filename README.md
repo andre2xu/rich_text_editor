@@ -13,7 +13,7 @@ The free version (<a href="https://andre2xu.github.io/rich_text_editor/">view de
 - Formats
 - Text color
 - Text size
-- Typefaces (downloaded fonts are supported)
+- Typefaces (custom fonts are supported)
 - Undo & redo
 - Copy, cut, and paste
 <br><br>
@@ -32,14 +32,13 @@ npm run build  OR  npm run watch
 ```
 
 ## <br>Usage
-After installation, run the index.html file on a localhost server to view the demo.
+After installation, run the index.html file on a localhost server to view the demo. To learn how to use the rich text editor class, see  ***src/index.ts***.
 
-See ***src/index.ts*** to learn how to use the rich text editor's public methods.
+If you want to use this in a project you have two options: take the mjs/cjs file in the dist folder and use it as a local module (recommended way) OR after cloning the repo and following the installation instructions, run the following `npm run package` to convert the entire project folder into an npm package, then do `npm install ./rich_text_editor`. This creates a symbolic link to the package.
 
-The class itself will be in the 'dist' folder after you run the build/watch script. Choose the appropriate rich text editor JS file for your project.
+If you go with the latter approach, you can access the class by importing the 'mjs' module: `import RichTextEditor from '@andre2xu/rich_text_editor/dist/rich-text-editor.mjs';`. Point to the 'cjs' module if you're importing with `require()`.
 
-If you want to install the project as an npm dependency, try one of <a href="https://stackoverflow.com/questions/8088795/installing-a-local-module-using-npm" target="_blank">these methods</a>. They typically involve symbolic linking. The local module will be the 'dist' folder. I recommend making a copy of it and using that as the dependency.
-<br><br>
+Note that both approaches require you to have a bundler like Webpack installed.
 
 ## IMPORTANT
 - You can do whatever you want with the free version but for the premium version please visit my website for more info.
