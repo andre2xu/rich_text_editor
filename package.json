@@ -6,6 +6,7 @@
   "module": "dist/rich-text-editor.mjs.js",
   "browser": "dist/rich-text-editor.umd.js",
   "type": "module",
+  "private": "true",
   "scripts": {
     "watch": "rollup -c -w",
     "build": "rollup -c"
