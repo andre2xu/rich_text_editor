@@ -16,6 +16,7 @@ The free version (<a href="https://andre2xu.github.io/rich_text_editor/">view de
 - Typefaces (custom fonts are supported)
 - Undo & redo
 - Copy, cut, and paste
+- Style clearing
 <br><br>
 
 ## Installation
