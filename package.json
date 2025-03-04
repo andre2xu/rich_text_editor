@@ -1,5 +1,5 @@
 {
-  "name": "@andre2xu/rich_text_editor",
+  "name": "@andre2xu/rich-text-editor",
   "version": "1.0.0",
   "description": "",
   "main": "dist/rich-text-editor.cjs.js",
@@ -10,7 +10,7 @@
   "scripts": {
     "watch": "rollup -c -w",
     "build": "rollup -c",
-    "package": "npm i && npm i rimraf && rollup -c && copy \"./LICENSE\" \"./dist\" && move \"./dist\" \"../rte_dist\" && rimraf \"./.*\" --glob && rimraf \"./!(package.json)\" --glob && move \"../rte_dist\" \"./dist\""
+    "package": "npm i && npm i rimraf && rollup -c && copy \"./LICENSE\" \"./dist\" && move \"./dist\" \"../rte_dist\" && rimraf \"./.*\" --glob && rimraf \"./!(package.json|package-lock.json)\" --glob && move \"../rte_dist\" \"./dist\""
   },
   "repository": {
     "type": "git",
