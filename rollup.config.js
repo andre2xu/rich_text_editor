@@ -17,6 +17,10 @@ const TYPESCRIPT_OPTIONS = {
 	allowSyntheticDefaultImports: true
 };
 
+const COMMONJS_OPTIONS = {
+	transformMixedEsModules: true
+};
+
 
 
 export default [
@@ -28,10 +32,11 @@ export default [
 			file: package_json.browser,
 			format: 'umd'
 		},
+		external: [], // ensure JQuery is included in the bundle
 		plugins: [
 			typescript(TYPESCRIPT_OPTIONS),
 			resolve(), // so Rollup can find external dependencies in node_modules
-			commonjs(), // so Rollup can convert node modules to an ES module
+			commonjs(COMMONJS_OPTIONS), // so Rollup can convert node modules to an ES module
 			babel(BABEL_OPTIONS)
 		]
 	},
@@ -44,10 +49,11 @@ export default [
 			{ file: package_json.main, format: 'cjs', exports: 'default' },
 			{ file: package_json.module, format: 'es', exports: 'default' }
 		],
+		external: [], // ensure JQuery is included in the bundles
 		plugins: [
 			typescript(TYPESCRIPT_OPTIONS),
 			resolve(),
-			commonjs(),
+			commonjs(COMMONJS_OPTIONS),
 			babel(BABEL_OPTIONS)
 		]
 	},
@@ -60,10 +66,11 @@ export default [
 			file: 'index.js',
 			format: 'iife' // for script tags
 		},
+		external: [], // ensure JQuery is included in the bundle
 		plugins: [
 			typescript(TYPESCRIPT_OPTIONS),
 			resolve(),
-			commonjs(),
+			commonjs(COMMONJS_OPTIONS),
 			babel(BABEL_OPTIONS)
 		]
 	}
