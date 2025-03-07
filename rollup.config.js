@@ -44,7 +44,6 @@ export default [
 	// CommonJS (for Node) and ES module (for bundlers) build
 	{
 		input: 'src/main.ts',
-		external: ['jquery'],
 		output: [
 			{ file: package_json.main, format: 'cjs', exports: 'default' },
 			{ file: package_json.module, format: 'es', exports: 'default' }
