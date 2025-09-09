@@ -4,7 +4,7 @@ This is a class that allows you to build your own rich text editor. It provides 
 
 <a href="https://andre2xu.github.io/rich_text_editor/">Free version demo</a>
 
-<a href="https://richtexteditor.andrewspetprojects.com">Premium version demo</a><br><br>
+<a href="#">Premium version demo (n/a)</a><br><br>
 
 ## Features
 *Free Version*
